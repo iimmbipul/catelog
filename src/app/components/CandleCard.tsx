@@ -21,7 +21,7 @@ interface CandleCardProps {
 export default function CandleCard({ candle }: CandleCardProps) {
   const [hovered, setHovered] = useState(false);
   const discountedPrice = candle.price - (candle.price * candle.discount) / 100;
-  const whatsAppLink = `https://wa.me/79903645832?text=I'm%20interested%20in%20Candle%20ID:%20${candle.id}`;
+  const whatsAppLink = `https://wa.me/+9179903645832?text=I'm%20interested%20in%20Candle%20ID:%20${candle.id}`;
 
   return (
     <div
