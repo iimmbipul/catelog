@@ -1,0 +1,110 @@
+.card {
+  background: #fff;
+  border-radius: 2rem;
+  box-shadow: 0 4px 32px 0 rgba(224, 122, 27, 0.07), 0 1.5px 8px 0 rgba(0,0,0,0.03);
+  padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+  margin: 0 auto;
+  max-width: 350px;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.3s, transform 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.card:hover {
+  box-shadow: 0 8px 40px 0 rgba(224, 122, 27, 0.13), 0 2px 16px 0 rgba(0,0,0,0.06);
+  transform: translateY(-6px) scale(1.025);
+}
+.image {
+  border-radius: 1.5rem;
+  margin-bottom: 1.2rem;
+  background: #fff7ed;
+  box-shadow: 0 2px 12px 0 rgba(224, 122, 27, 0.08);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.card:hover .image {
+  box-shadow: 0 6px 24px 0 rgba(224, 122, 27, 0.18);
+  transform: scale(1.04) rotate(-1deg);
+}
+.name {
+  font-size: 1.35rem;
+  color: #e07a1b;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  margin: 0.5rem 0 0.2rem 0;
+  letter-spacing: 1px;
+}
+.fragrance {
+  font-size: 1.05rem;
+  color: #7c6f57;
+  margin-bottom: 0.5rem;
+}
+.description {
+  font-size: 1rem;
+  color: #5d4037;
+  margin-bottom: 1.1rem;
+  text-align: center;
+  min-height: 48px;
+}
+.priceSection {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+.price {
+  font-size: 1.25rem;
+  color: #388e3c;
+  font-weight: bold;
+}
+.originalPrice {
+  font-size: 1.05rem;
+  color: #bdbdbd;
+  text-decoration: line-through;
+}
+.discount {
+  font-size: 1.05rem;
+  color: #ff5722;
+  font-weight: bold;
+  background: #fff3e0;
+  border-radius: 6px;
+  padding: 0.1rem 0.5rem;
+  margin-left: 0.2rem;
+}
+.buyNow {
+  background: linear-gradient(90deg, #e07a1b 0%, #ffd89b 100%);
+  color: #fff;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.08rem;
+  box-shadow: 0 2px 8px 0 rgba(224, 122, 27, 0.10);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  border: none;
+  outline: none;
+  margin-top: auto;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+.buyNow:hover {
+  background: linear-gradient(90deg, #ffd89b 0%, #e07a1b 100%);
+  color: #fffde7;
+  box-shadow: 0 4px 16px 0 rgba(224, 122, 27, 0.18);
+  transform: scale(1.04);
+}
+@media (max-width: 600px) {
+  .card {
+    padding: 1.2rem 0.5rem 1rem 0.5rem;
+    min-height: 400px;
+  }
+  .image {
+    width: 100%;
+    height: auto;
+  }
+}
