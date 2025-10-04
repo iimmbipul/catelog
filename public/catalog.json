@@ -61,5 +61,14 @@
     "discount": 0,
     "description": "Soft floral fragrance with a subtle sweetness",
     "fragrance": "Rose & Vanilla"
+  },
+  {
+    "id": "D008",
+    "name": "Lotus Bloom Candle",
+    "image": "/images/candle8.jpg",
+    "price": 129,
+    "discount": 0,
+    "description": "A serene, natural scene of blooming lotus",
+    "fragrance": "Rose"
   }
 ]
