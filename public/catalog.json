@@ -70,5 +70,14 @@
     "discount": 0,
     "description": "A serene, natural scene of blooming lotus",
     "fragrance": "Rose"
+  },
+  {
+    "id": "D009",
+    "name": "Lotus Diya Candle",
+    "image": "/images/candle9.jpeg",
+    "price": 249,
+    "discount": 0,
+    "description": "A lottus diyas candle for a festive vibe",
+    "fragrance": "Rose"
   }
 ]
