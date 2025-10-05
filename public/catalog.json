@@ -79,5 +79,41 @@
     "discount": 0,
     "description": "A lottus diyas candle for a festive vibe",
     "fragrance": "Rose"
+  },
+  {
+    "id": "D010",
+    "name": "Forever Falme",
+    "image": "/images/candle10.jpeg",
+    "price": 99,
+    "discount": 0,
+    "description": "A fragnant moment of bliss, craftedd to celebrate your special moments",
+    "fragrance": "Rose"
+  },
+  {
+    "id": "D011",
+    "name": "Marigold Bliss",
+    "image": "/images/candle11.png",
+    "price": 99,
+    "discount": 0,
+    "description": "A vibrant blend of earthy warmth and floral elegance",
+    "fragrance": "Jasmine"
+  },
+  {
+    "id": "D012",
+    "name": "Shubh Deepam",
+    "image": "/images/candle12.jpg",
+    "price": 169,
+    "discount": 0,
+    "description": "A traditional star-shaped clay lamp holder, painted in festive red and gold, cradling calming pink-colored waxes",
+    "fragrance": "Lavender"
+  },
+  {
+    "id": "D013",
+    "name": "Diwali Glow Gift Box",
+    "image": "/images/candle13.jpg",
+    "price": 299,
+    "discount": 0,
+    "description": "This product is the beautifully designed white gift box, perfect for presenting your chosen Diwali treats and gifts.",
+    "fragrance": "Vanilla"
   }
 ]
