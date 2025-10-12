@@ -2,6 +2,7 @@
   {
     "id": "D001",
     "name": "Diwali Bliss Candle",
+    "bestSeller": true,
     "image": "/images/candle1.jpg",
     "price": 500,
     "discount": 20,
@@ -11,6 +12,7 @@
   {
     "id": "D002",
     "name": "Festive Glow Candle",
+    "trending": true,
     "image": "/images/candle2.jpg",
     "price": 160,
     "discount": 20,
@@ -115,5 +117,25 @@
     "discount": 0,
     "description": "This product is the beautifully designed white gift box, perfect for presenting your chosen Diwali treats and gifts.",
     "fragrance": "Vanilla"
+  },
+  {
+    "id": "D014",
+    "name": "Set of 6 Daisy Candle",
+    "image": "/images/candle14.jpeg",
+    "price": 221.11,
+    "discount": 10,
+    "description": "Warm saffron and spice blend, hand-poured soy wax candle with a long-lasting aroma.",
+    "fragrance": "Jasmine & Sandalwood"
+  },
+  {
+    "id": "D015",
+    "name": "Bubble Jasmine Candle (1 Piece)",
+    "bestSeller": false,
+    "trending": true,
+    "image": "/images/candle15.jpeg",
+    "price": 99,
+    "discount": 0,
+    "description": "A rich jasmine fragrance with subtle woody undertones — perfect for evenings and gifting.",
+    "fragrance": "Jasmine & Sandalwood"
   }
 ]

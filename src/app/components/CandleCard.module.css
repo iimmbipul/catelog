@@ -13,6 +13,37 @@
   position: relative;
   overflow: hidden;
 }
+
+/* Badge container sits in the top-left corner */
+.badges {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  z-index: 4;
+}
+
+.badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transform-origin: left top;
+  transition: transform 0.18s, opacity 0.18s;
+}
+
+.bestSeller {
+  background: linear-gradient(90deg, #f6c84c 0%, #e07a1b 100%);
+  color: #fff;
+}
+
+.trending {
+  background: linear-gradient(90deg, #9c27b0 0%, #7b1fa2 100%);
+}
 .card:hover {
   box-shadow: 0 8px 40px 0 rgba(224, 122, 27, 0.13), 0 2px 16px 0 rgba(0,0,0,0.06);
   transform: translateY(-6px) scale(1.025);
@@ -23,10 +54,19 @@
   background: #fff7ed;
   box-shadow: 0 2px 12px 0 rgba(224, 122, 27, 0.08);
   transition: box-shadow 0.3s, transform 0.3s;
+  /* responsive square box; image will fill and crop to preserve aspect ratio */
+  width: 220px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
 }
 .card:hover .image {
   box-shadow: 0 6px 24px 0 rgba(224, 122, 27, 0.18);
   transform: scale(1.04) rotate(-1deg);
+}
+
+.card:hover .badge {
+  transform: translateY(-2px) scale(1.02);
 }
 .name {
   font-size: 1.35rem;
@@ -76,7 +116,7 @@
 .buyNow {
   background: linear-gradient(90deg, #e07a1b 0%, #ffd89b 100%);
   color: #fff;
-  padding: 0.7rem 1.5rem;
+  padding: 0.7rem 1.2rem;
   border-radius: 10px;
   text-decoration: none;
   font-weight: 600;
@@ -88,7 +128,10 @@
   margin-top: auto;
   letter-spacing: 0.5px;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex; /* switch to flex for easy alignment */
+  align-items: center;  /* vertically center icon + text */
+  justify-content: center;
+  gap: 0.6rem; /* space between icon and text */
   position: relative;
   overflow: hidden;
 }
@@ -96,7 +139,7 @@
   background: linear-gradient(90deg, #ffd89b 0%, #e07a1b 100%);
   color: #fffde7;
   box-shadow: 0 4px 16px 0 rgba(224, 122, 27, 0.18);
-  transform: scale(1.04);
+  transform: translateY(-2px) scale(1.02);
 }
 @media (max-width: 600px) {
   .card {
@@ -104,7 +147,100 @@
     min-height: 400px;
   }
   .image {
-    width: 100%;
-    height: auto;
+    width: 92%;
+    /* make the image box taller on mobile while still covering and preserving aspect ratio */
+    max-width: 360px;
+    height: 320px;
+    aspect-ratio: auto;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+/* Modal styles */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  padding: 2rem;
+}
+.modal {
+  background: #fff;
+  border-radius: 1rem;
+  max-width: 920px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  position: relative;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.modalClose {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #444;
+}
+.modalImage {
+  max-width: 880px;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  object-fit: contain;
+}
+.modalBuyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(90deg, #25D366 0%, #128C7E 100%);
+  color: #fff;
+  padding: 0.7rem 1.1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(37,211,102,0.18);
+}
+.modalBuyBtn:hover { transform: translateY(-2px); }
+.whatsappIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: 0 0 auto;
+}
+
+.whatsappIcon svg { display: block; width: 100%; height: 100%; }
+
+/* Accessibility: visible focus for keyboard users */
+.buyNow:focus-visible {
+  outline: 3px solid rgba(224,122,27,0.18);
+  outline-offset: 3px;
+}
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .buyNow, .card, .image { transition: none !important; }
+}
+
+@media (max-width: 600px) {
+  .modal {
+    padding: 1rem;
+  }
+  .modalImage {
+    max-height: 60vh;
   }
 }
