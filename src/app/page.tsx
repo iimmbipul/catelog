@@ -22,13 +22,50 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1>🪔 Diwali Candle Catalog 🕯️</h1>
-        <p>Brighten your Diwali with our eco-friendly, fragrant candles!</p>
-        <nav className={styles.menu}>
-          <Link href="#catalog">Catalog</Link>
-          <Link href="#about">About</Link>
-          <Link href="#contact">Contact</Link>
-        </nav>
+        <div className={styles.headerInner}>
+          <div className={styles.headerLeft} aria-hidden></div>
+          <div className={styles.brand}>
+            <a href="/" aria-label="White and Wick Home">
+              <img src="/whitewick.jpg" alt="White & Wick" className={styles.brandLogo} />
+            </a>
+              <h2 style={{color:"black", textAlign:'center',width:'100%'}}>White &amp; Wick</h2>
+            <div className={styles.brandText}>
+            
+              <p className={styles.catalogTitle}>Diwali Candle Catalog</p>
+            </div>
+          </div>
+
+          <div className={styles.socials}>
+            <a
+              href="https://www.instagram.com/whiteandwick/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="White and Wick on Instagram"
+            >
+              {/* Instagram Icon */}
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <rect x="3" y="3" width="18" height="18" rx="5" stroke="#E1306C" strokeWidth="1.4"/>
+                <circle cx="12" cy="12" r="3.2" stroke="#E1306C" strokeWidth="1.4"/>
+                <circle cx="17.5" cy="6.5" r="0.9" fill="#E1306C" />
+              </svg>
+            </a>
+            <a
+              href="https://www.youtube.com/@Whiteandwick"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="White and Wick on YouTube"
+            >
+              {/* YouTube Icon */}
+              <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M23.5 2s-.24-1.7-.98-2.45C21.6-.48 20.25 0 20.25 0S18.5 0 17.5 0H6.5C5.5 0 3.75 0 3.75 0S2.4-.48 1.48-.45C.74-.2.5 1.5.5 1.5S0 3.3 0 5.1v5.76c0 1.8.5 3.6.5 3.6s.24 1.7.98 2.45C2.4 16.48 3.75 16 3.75 16s1.75 0 2.75 0h11c1 0 2.75 0 2.75 0s1.35.48 2.27.45c.74.25.98-1.45.98-1.45s.5-1.8.5-3.6V5.1c0-1.8-.5-3.1-.5-3.1z" fill="#FF0000"/>
+                <path d="M9.8 4.7l6.2 3.3-6.2 3.3V4.7z" fill="#fff"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div className={styles.headerSub}>
+          <p>Brighten your Diwali with our eco-friendly, fragrant candles!</p>
+        </div>
       </header>
       <main id="catalog" className={styles.catalog}>
         {loading && <span>Loading catalog...</span>}

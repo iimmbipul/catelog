@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600;700&display=swap');
+
 body {
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   background: #faf9f6;
@@ -15,9 +17,9 @@ body {
 
 .header {
   width: 100%;
-  background: #fff;
-  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.04);
-  padding: 2.5rem 0 1.5rem 0;
+  background: linear-gradient(135deg, #fffaf1 0%, #fff6ee 40%, #fff 100%);
+  box-shadow: 0 6px 30px 0 rgba(0,0,0,0.06);
+  padding: 2.25rem 0 1.25rem 0;
   text-align: center;
   border-bottom-left-radius: 32px;
   border-bottom-right-radius: 32px;
@@ -26,6 +28,72 @@ body {
   top: 0;
   z-index: 10;
 }
+
+.headerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: grid;
+  grid-template-columns: 0px 1fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.headerLeft { width: 72px; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: start;
+}
+
+.brandLogo {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(224,122,27,0.12);
+}
+
+.brandText h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #e07a1b;
+  font-weight: 700;
+}
+.brandText { text-align: center; }
+.brandText h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  margin: 0;
+  color: #000;
+  line-height: 1;
+}
+.catalogTitle { margin: 0; font-size: 0.95rem; color: #000; }
+.brandText p { display:none; }
+
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-self: end;
+}
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.socials a:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+
+.headerSub { text-align: center; margin-top: 0.4rem; color: #000; font-size: 0.95rem; }
 
 .header h1 {
   font-size: 2.8rem;
@@ -89,6 +157,8 @@ body {
   .header h1 {
     font-size: 2rem;
   }
+  .headerInner { grid-template-columns: 00px 1fr auto; gap: 0.5rem; align-items: center; }
+  .brandText h1 { font-size: 1.5rem; }
 }
 
 @media (max-width: 600px) {
@@ -100,4 +170,5 @@ body {
   .header {
     padding: 1.2rem 0.5rem 0.5rem 0.5rem;
   }
+  .brandText h1 { font-size: 1.25rem; }
 }
