@@ -13,6 +13,7 @@
     "id": "D002",
     "name": "Festive Glow Candle",
     "trending": true,
+    "soldout": true,
     "image": "/images/candle2.jpg",
     "price": 160,
     "discount": 10,
@@ -87,6 +88,7 @@
     "name": "Forever Falme",
     "image": "/images/candle10.jpeg",
     "price": 99,
+    "soldout": true,
     "discount": 0,
     "description": "A fragnant moment of bliss, craftedd to celebrate your special moments",
     "fragrance": "Rose"
@@ -133,9 +135,37 @@
     "bestSeller": false,
     "trending": true,
     "image": "/images/candle15.jpeg",
-    "price": 99,
+    "price": 199,
     "discount": 0,
     "description": "A rich jasmine fragrance with subtle woody undertones — perfect for evenings and gifting.",
     "fragrance": "Jasmine & Sandalwood"
+  }
+  ,
+  {
+    "id": "D016",
+    "name": "Laddoo shots Candle",
+    "image": "/images/candle16.jpeg",
+    "price": 149,
+    "discount": 0,
+    "description": "A warm vanilla blend that creates a cozy evening ambiance.",
+    "fragrance": "Vanilla"
+  },
+  {
+    "id": "D017",
+    "name": "Set of 5 laddoo candles",
+    "image": "/images/candle17.jpeg",
+    "price": 199,
+    "discount": 0,
+    "description": "Festive vibes with a rich jasmine and sandalwood aroma.",
+    "fragrance": "Jasmine & Sandalwood"
+  },
+  {
+    "id": "D018",
+    "name": "Set of 5 Daisy Candle Diya",
+    "image": "/images/candle18.jpeg",
+    "price": 299,
+    "discount": 0,
+    "description": "Rich sandalwood aroma for a calming experience.",
+    "fragrance": "Sandalwood"
   }
 ]

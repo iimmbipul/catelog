@@ -14,7 +14,11 @@ export default function Home() {
 
   useEffect(() => {
     fetchCatalog()
-      .then(setCandles)
+      .then((data) => {
+        // Ensure we don't mutate the original array from the fetch; show in reverse order
+        const reversed = Array.isArray(data) ? [...data].reverse() : data;
+        setCandles(reversed);
+      })
       .catch(() => setError("Failed to load catalog."))
       .finally(() => setLoading(false));
   }, []);
