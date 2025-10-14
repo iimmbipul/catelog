@@ -1,0 +1,183 @@
+[
+    {
+        "id": "D001",
+        "name": "Diya's Embrace",
+        "bestSeller": true,
+        "image": "/images/candle1.jpg",
+        "price": 650,
+        "discount": 0,
+        "description": "An opulent, starburst-design candle holder featuring delicate jeweled accents, paired with 7 clean-burning, unscented **Sacred Glow** tea lights. Evokes the warmth and light of tradition and festive gathering.",
+        "fragrance": "Unscented Tea Lights (Focus on Ambiance and Holder)"
+    },
+    {
+        "id": "D002",
+        "name": "Zenith Bloom",
+        "bestSeller": false,
+        "image": "/images/candle2.jpg",
+        "price": 320,
+        "discount": 15,
+        "description": "A single, minimalist golden lotus holder designed for the modern desk. Its crisp lines and jewel accents catch the morning light, promoting clarity and focus for your daily ritual. Pair with our Eucalyptus & Mint tea lights.",
+        "fragrance": "Unscented Holder (Suggested: Eucalyptus & White Tea)"
+    },
+    {
+        "id": "D003",
+        "name": "Heirloom Wreath",
+        "bestSeller": false,
+        "image": "/images/candle3.jpg",
+        "price": 280,
+        "discount": 0,
+        "description": "A festive tea light in a gold-plated holder, ringed by classic ruby and emerald jewels. Designed to evoke the comfort of vintage holiday decor and the scent of a Christmas past. Perfect for mantlepieces and intimate festive settings.",
+        "fragrance": "Spiced Clove & Fir Needle"
+    },
+    {
+        "id": "D004",
+        "name": "Terra Bloom",
+        "bestSeller": false,
+        "image": "/images/candle4.jpeg",
+        "price": 450,
+        "discount": 0,
+        "description": "An artisanal candle featuring a sculpted Sweet Orange bloom nestled in a creamy, natural wax base, set within a rustic terracotta Diya. Burns with a warm, soft light, perfect for evening rituals and adding a natural, grounded warmth to any space.",
+        "fragrance": "Vetiver & Sweet Orange"
+    },
+    {
+        "id": "D005",
+        "name": "Zen Diya",
+        "bestSeller": false,
+        "image": "/images/candle5.jpeg",
+        "price": 420,
+        "discount": 5,
+        "description": "The perfect ritual candle for meditation and stillness. Features a sculpted Marigold bloom set in a creamy soy wax base, cradled by an earthy terracotta Diya. Its soft, natural light grounds the spirit and promotes clean, peaceful energy.",
+        "fragrance": "White Tea & Sandalwood"
+    },
+    {
+        "id": "D006",
+        "name": "Aarti Glow",
+        "bestSeller": false,
+        "image": "/images/candle6.jpeg",
+        "price": 580,
+        "discount": 0,
+        "description": "An exquisite ritual candle featuring hand-sculpted Marigold and Lotus wax forms, set in a traditional terracotta Diya. Designed for sacred ceremony, this candle burns with the rich, deep fragrance of ancient temples, promoting devotion and auspicious beginnings. Ideal for altars and puja rooms.",
+        "fragrance": "Sandalwood & Oudh"
+    },
+    {
+        "id": "D007",
+        "name": "Prakriti Lotus",
+        "bestSeller": false,
+        "image": "/images/candle7.jpg",
+        "price": 550,
+        "discount": 10,
+        "description": "An exquisite, large-format candle featuring a terracotta Lotus base. The central Diya is filled with natural soy wax and hand-finished with delicate rose petals. Designed to bring natural balance and serenity to your space. The essence of the earth and the pure heart of the flower.",
+        "fragrance": "Rose & Earthy Sandalwood"
+    },
+    {
+        "id": "D008",
+        "name": "Cashmere Petal",
+        "bestSeller": true,
+        "image": "/images/candle8.jpg",
+        "price": 680,
+        "discount": 0,
+        "description": "A deeply indulgent, hand-sculpted lotus candle in a soft blush pink. Its detailed petals cast a tranquil glow, transforming any space into a spa sanctuary. Place near a soaking tub for the ultimate moment of calm and self-renewal.",
+        "fragrance": "White Lotus & Lavender Musk"
+    },
+    {
+        "id": "D009",
+        "name": "Celestial Water",
+        "bestSeller": false,
+        "image": "/images/candle9.jpeg",
+        "price": 490,
+        "discount": 0,
+        "description": "A striking artisanal candle featuring a sculpted Pink Lotus floating on a sea of deep, sky-blue wax, elegantly detailed with pearl accents. Housed in a traditional terracotta Diya, this piece is designed to bring an essence of dreamy calm and natural harmony to your space.",
+        "fragrance": "Blue Lotus & Sea Salt"
+    },
+    {
+        "id": "D010",
+        "name": "Whisper Bloom",
+        "bestSeller": false,
+        "image": "/images/candle10.jpeg",
+        "price": 350,
+        "discount": 0,
+        "description": "An intimate candle designed for sharing. Features three sculpted wax hearts set into creamy, hand-poured natural wax within a rustic terracotta pot. Burns with a warm, inviting glow and a deep, sensual fragrance, ideal for romantic evenings and heartfelt gifting.",
+        "fragrance": "Dark Rose & Cocoa Absolute"
+    },
+    {
+        "id": "D011",
+        "name": "Veridian Soul (Set of 2)",
+        "bestSeller": false,
+        "image": "/images/candle11.png",
+        "price": 750,
+        "discount": 15,
+        "description": "A striking pair of artisanal candles designed for harmony and balance. Each terracotta pot features a hand-sculpted coral bloom resting on a deep sage-green wax base. The earthy aroma of moss and herbal green creates a profoundly tranquil atmosphere, promoting peace and equilibrium.",
+        "fragrance": "White Sage & Cedarwood"
+    },
+    {
+        "id": "D012",
+        "name": "Mauve Mandala",
+        "bestSeller": false,
+        "image": "/images/candle12.jpg",
+        "price": 530,
+        "discount": 5,
+        "description": "A stunning multi-tea light candle holder, hand-painted in festive red and gold with intricate floral details. It is filled with five soft Mauve tea lights, creating a warm, abundant glow. Designed to bring delicate sweetness and auspicious energy to your home and celebrations.",
+        "fragrance": "Lavender Blossom & Rosewater"
+    },
+    {
+        "id": "D013",
+        "name": "Utsav Crate (Gift Set)",
+        "bestSeller": false,
+        "image": "/images/candle13.jpg",
+        "price": 899,
+        "discount": 10,
+        "description": "The ultimate gift set for auspicious occasions. This curated crate includes one traditional Diya candle and two sculpted, marigold-textured sphere candles, symbolizing joy and abundance. Designed to fill any home with a bright, festive light and the warmth of celebration.",
+        "fragrance": "Golden Marigold & Kumquat"
+    },
+    {
+        "id": "D014",
+        "name": "Zen Bloom Floats (Set of 6)",
+        "bestSeller": false,
+        "bestSeller": true,
+        "image": "/images/candle14.jpeg",
+        "price": 480,
+        "discount": 0,
+        "description": "A set of six exquisite floating candles, each hand-sculpted as a delicate daisy with a warm yellow center. Designed to bring instant tranquility to any water feature, these blooms cast a serene glow, perfect for meditation, spa baths, or peaceful evenings. Subtly fragranced for purity.",
+        "fragrance": "White Tea & Water Lily"
+    },
+    {
+        "id": "D015",
+        "name": "Axis Cube (Sculptural Set)",
+        "bestSeller": false,
+        "image": "/images/candle15.jpeg",
+        "price": 595,
+        "discount": 10,
+        "description": "A set of three modern, sculptural bubble candles in a high-contrast color palette: Marigold, Matte Black, and Ivory. Designed as a statement piece of decor, these cubes add texture and contemporary edge to any space. Subtle, sophisticated fragrance that complements the minimalist aesthetic.",
+        "fragrance": "Black Amber & Fig Leaf"
+    },
+    {
+        "id": "D016",
+        "name": "Gilded Nectar (Set of 4)",
+        "bestSeller": false,
+        "image": "/images/candle16.jpeg",
+        "price": 790,
+        "discount": 10,
+        "description": "A set of four exquisite votive candles, designed for opulent celebration. Each candle features a base of creamy honey wax topped with a marigold-textured sphere, delicate flecked with silver leaf. Displayed on a gilded tray, they fill your space with abundant light and a rich, inviting sweetness.",
+        "fragrance": "Saffron & Caramelized Honey"
+    },
+    {
+        "id": "D017",
+        "name": "Zest of Joy (Gift Box)",
+        "bestSeller": false,
+        "image": "/images/candle17.jpeg",
+        "price": 410,
+        "discount": 0,
+        "description": "A charming, ready-to-gift box containing five hand-sculpted, marigold-orange sphere candles. The bright color and playful packaging are designed to spark instant happiness. Ideal for hostess gifts, thank yous, or small festive gestures. Ignite for a burst of bright, uplifting aroma.",
+        "fragrance": "Sweet Tangerine & Honey Blossom"
+    },
+    {
+        "id": "D018",
+        "name": "Rangoli Blooms (Assortment)",
+        "bestSeller": false,
+        "image": "/images/candle18.jpeg",
+        "price": 380,
+        "discount": 15,
+        "description": "A vibrant assortment of artisanal candles, each featuring a hand-sculpted flower (Pink, Yellow, Green, Lilac) set in creamy wax within a rustic terracotta Diya. Designed to mimic the color and energy of a festive Rangoli, these candles are perfect for decorating in abundance and sharing joy.",
+        "fragrance": "Sweet Peony & Gardenia Medley"
+    }
+]
