@@ -29,9 +29,9 @@ export default function Home() {
         <div className={styles.headerInner}>
           <div className={styles.headerLeft} aria-hidden></div>
           <div className={styles.brand}>
-            <a href="/" aria-label="White and Wick Home">
+            <Link href="/" aria-label="White and Wick Home">
               <img src="/whitewick.jpg" alt="White & Wick" className={styles.brandLogo} />
-            </a>
+            </Link>
               <h2 style={{color:"black", textAlign:'center',width:'100%'}}>White &amp; Wick</h2>
             <div className={styles.brandText}>
             
