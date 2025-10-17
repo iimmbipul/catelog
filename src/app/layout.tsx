@@ -24,6 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <title>White & Wick - Diwali Candle Catalog</title>
+      <meta name="description" content="Explore our exclusive Diwali candle collection at White & Wick. Handcrafted scents to illuminate your celebrations." />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>
