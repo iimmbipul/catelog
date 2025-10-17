@@ -20,6 +20,37 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+### Google Sheets integration
+
+This project can load catalog data from a Google Sheet instead of the local `public/catalog.json` file. There are two supported methods:
+
+- Public CSV export (no API key): set the `SHEETS_SPREADSHEET_ID` environment variable to your spreadsheet ID. The API route will fetch the CSV export and transform rows into the app's candle objects.
+- Google Sheets API (private sheets): set both `SHEETS_SPREADSHEET_ID` and `SHEETS_API_KEY` environment variables. The app will call the Sheets API `spreadsheets.values` endpoint for range `Sheet1` by default.
+
+Environment variables (create `.env.local`):
+
+SHEETS_SPREADSHEET_ID=your_spreadsheet_id_here
+SHEETS_API_KEY=optional_api_key_for_private_sheets
+SHEETS_RANGE=optional_range_like_Sheet1!A1:G100
+
+If `SHEETS_SPREADSHEET_ID` is not set or Sheets fetch fails, the app falls back to `public/catalog.json` automatically.
+
+Make sure the sheet's first row contains headers that match the keys used by the app (for example: `id,name,image,price,discount,description,fragrance,bestSeller,trending,soldout,left`).
+
+Service account (private sheet) setup
+
+If your sheet is private, create a Google Cloud service account and download the JSON key. Then either:
+
+- Set `SERVICE_ACCOUNT_FILE` in `.env.local` to the absolute path of the JSON key file on the server where Next runs. Example:
+
+SERVICE_ACCOUNT_FILE=C:\Users\you\secrets\catelog-service-account.json
+
+- Or copy the entire JSON and set it as `SERVICE_ACCOUNT_KEY` in `.env.local` (safe for local dev, not recommended for public repos). Example:
+
+SERVICE_ACCOUNT_KEY="{...the JSON contents...}"
+
+Finally, share the sheet with the service account email (example you provided: `catelog@extreme-pixel-475420-d5.iam.gserviceaccount.com`) as Viewer. The API route will automatically detect the service account key and use it to read the sheet.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

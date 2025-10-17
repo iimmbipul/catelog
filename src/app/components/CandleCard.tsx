@@ -49,7 +49,7 @@ export default function CandleCard({ candle, onImageClick }: CandleCardProps) {
             { candle.trending && (
               <span className={`${styles.badge} ${styles.trending}`}>Trending</span>
             ) }
-            { typeof candle.left === 'number' && (
+            { typeof candle.left === 'number' && candle.left > 0 && (
               <span className={`${styles.badge} ${styles.leftCount}`}>{candle.left} left</span>
             ) }
           </>
