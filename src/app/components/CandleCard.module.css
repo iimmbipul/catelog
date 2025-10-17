@@ -64,6 +64,16 @@
 .trending {
   background: linear-gradient(90deg, #9c27b0 0%, #7b1fa2 100%);
 }
+/* Left count badge to show remaining stock */
+.leftCount {
+  background: linear-gradient(90deg, #ff8a80 0%, #e53935 100%); /* reddish tone */
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(229,57,53,0.16);
+  font-size: 0.8rem;
+}
 .card:hover {
   box-shadow: 0 8px 40px 0 rgba(224, 122, 27, 0.13), 0 2px 16px 0 rgba(0,0,0,0.06);
   transform: translateY(-6px) scale(1.025);

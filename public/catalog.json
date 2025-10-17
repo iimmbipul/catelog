@@ -1,25 +1,6 @@
 [
-  {
-    "id": "D001",
-    "name": "Diwali Bliss Candle",
-    "bestSeller": true,
-    "image": "/images/candle1.jpg",
-    "price": 500,
-    "discount": 10,
-    "description": "Hand-poured soy wax candle with a cotton wick. Burns clean and bright for Diwali nights.",
-    "fragrance": "Jasmine & Sandalwood"
-  },
-  {
-    "id": "D002",
-    "name": "Festive Glow Candle",
-    "trending": true,
-    "soldout": true,
-    "image": "/images/candle2.jpg",
-    "price": 160,
-    "discount": 10,
-    "description": "Eco-friendly soy wax, long-lasting fragrance, perfect for gifting.",
-    "fragrance": "Rose & Vanilla"
-  },
+
+
   {
     "id": "D003",
     "name": " Set of 6 Golden Aura Tealight",
@@ -102,15 +83,7 @@
     "description": "A vibrant blend of earthy warmth and floral elegance",
     "fragrance": "Jasmine"
   },
-  {
-    "id": "D012",
-    "name": "Shubh Deepam",
-    "image": "/images/candle12.jpg",
-    "price": 169,
-    "discount": 0,
-    "description": "A traditional star-shaped clay lamp holder, painted in festive red and gold, cradling calming pink-colored waxes",
-    "fragrance": "Lavender"
-  },
+
   {
     "id": "D013",
     "name": "Diwali Glow Gift Box",
@@ -167,5 +140,38 @@
     "discount": 0,
     "description": "Rich sandalwood aroma for a calming experience.",
     "fragrance": "Sandalwood"
+  },
+    {
+    "id": "D002",
+    "name": "Festive Glow Candle",
+    "trending": true,
+    "soldout": false,
+      "image": "/images/candle2.jpg",
+      "price": 160,
+      "discount": 0,
+      "left": 1,
+    "description": "Eco-friendly soy wax, long-lasting fragrance, perfect for gifting.",
+    "fragrance": "Rose & Vanilla"
+  },
+    {
+    "id": "D001",
+    "name": "Diwali Bliss Candle",
+    "bestSeller": true,
+    "image": "/images/candle1.jpg",
+    "price": 500,
+    "discount": 10,
+      "left": 2,
+    "description": "Hand-poured soy wax candle with a cotton wick. Burns clean and bright for Diwali nights.",
+    "fragrance": "Jasmine & Sandalwood"
+  },
+    {
+    "id": "D012",
+    "name": "Shubh Deepam",
+    "image": "/images/candle12.jpg",
+    "price": 199,
+    "discount": 0,
+      "left": 3,
+    "description": "A traditional star-shaped clay lamp holder, painted in festive red and gold, cradling calming pink-colored waxes",
+    "fragrance": "Lavender"
   }
 ]
