@@ -1,4 +1,3 @@
-import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 type Candle = {
@@ -43,31 +42,35 @@ function rowToCandle(row: Record<string, string>): Candle | null {
 
 async function fetchWithServiceAccount(spreadsheetId: string, range: string) {
   try {
-    // lazy import to avoid adding to client bundles
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { google } = require('googleapis');
+  // lazy import to avoid adding to client bundles
+  // use dynamic ESM import instead of require()
+  const { google } = (await import('googleapis')) as typeof import('googleapis');
 
     // service account key can be provided either as a JSON string in SERVICE_ACCOUNT_KEY
     // or as a path to a file in SERVICE_ACCOUNT_FILE
     const keyJson = process.env.SERVICE_ACCOUNT_KEY;
     const keyFile = process.env.SERVICE_ACCOUNT_FILE;
-    let authClient;
+  // authClient may be a JWT client or a GoogleAuth client
+  let authClient: unknown;
 
     if (keyJson) {
-        console.log('Using service account key from environment variable');
       const key = JSON.parse(keyJson);
       authClient = new google.auth.JWT(key.client_email, undefined, key.private_key, ['https://www.googleapis.com/auth/spreadsheets.readonly']);
     } else if (keyFile) {
-      const fs = require('fs');
+      // use dynamic import for fs to keep behavior similar and satisfy ESLint
+      const fs = await import('fs');
       const key = JSON.parse(fs.readFileSync(keyFile, 'utf-8'));
       authClient = new google.auth.JWT(key.client_email, undefined, key.private_key, ['https://www.googleapis.com/auth/spreadsheets.readonly']);
     } else {
       // try default application credentials
-      authClient = new google.auth.GoogleAuth({ scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'] });
-      authClient = await authClient.getClient();
+      // keep googleAuth separate so we can call getClient() on the correct type
+      const googleAuth = new google.auth.GoogleAuth({ scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'] });
+      authClient = await googleAuth.getClient();
     }
 
-    const sheets = google.sheets({ version: 'v4', auth: authClient });
+  // cast authClient where required for the google.sheets call
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sheets = google.sheets({ version: 'v4', auth: authClient as any });
     const resp = await sheets.spreadsheets.values.get({ spreadsheetId, range });
     const values: string[][] = resp.data.values || [];
     if (values.length === 0) return [];
@@ -90,11 +93,10 @@ async function fetchWithServiceAccount(spreadsheetId: string, range: string) {
 
 
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const spreadsheetId = process.env.SHEETS_SPREADSHEET_ID;
   const apiKey = process.env.SHEETS_API_KEY; // optional
   const range = process.env.SHEETS_RANGE || 'Sheet1';
-  console.log('API Key:', apiKey);
 
   if (spreadsheetId) {
     return fetchWithServiceAccount(spreadsheetId, range).then(rows => {
