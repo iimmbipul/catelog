@@ -299,21 +299,6 @@ function tabContent(p: Product, tab: Tab) {
   switch (tab) {
     case "Description":
       return <p>{p.description}</p>;
-    case "Fragrance Notes":
-      return (
-        <div className="grid grid-cols-3 gap-4">
-          {(["top", "heart", "base"] as const).map((k) => (
-            <div key={k}>
-              <p className="eyebrow">{k}</p>
-              <ul className="mt-2 space-y-1">
-                {p.fragranceNotes[k].map((n) => (
-                  <li key={n} className="font-serif text-base text-cocoa-700">{n}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      );
     case "Candle Details":
       return (
         <ul className="space-y-1.5">
@@ -332,12 +317,6 @@ function tabContent(p: Product, tab: Tab) {
           <li>Burn for 2–3 hours on the first light so the wax pool reaches the edge.</li>
           <li>Never burn for more than 4 hours at a stretch.</li>
         </ol>
-      );
-    case "Candle Care":
-      return (
-        <ul className="list-disc space-y-2 pl-4">
-          {p.careInstructions.map((c, i) => <li key={i}>{c}</li>)}
-        </ul>
       );
     case "Shipping & Returns":
       return (
