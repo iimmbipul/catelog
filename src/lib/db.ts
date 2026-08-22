@@ -35,6 +35,23 @@ const DATA_DIR = path.join(process.cwd(), "data");
 
 /* -------- helpers -------- */
 
+/* Firestore rejects any field whose value is exactly `undefined`. Strip
+ * them recursively (arrays keep their items, objects lose the undefined keys). */
+function stripUndefined<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((v) => stripUndefined(v)) as unknown as T;
+  }
+  if (value !== null && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      if (v === undefined) continue;
+      out[k] = stripUndefined(v);
+    }
+    return out as T;
+  }
+  return value;
+}
+
 async function readJsonFallback<T>(fileName: string, defaults: T): Promise<T> {
   try {
     const raw = await fs.readFile(path.join(DATA_DIR, fileName), "utf-8");
@@ -59,7 +76,7 @@ async function listOrSeed<T extends { id: string }>(
   const seedData = await readJsonFallback<T[]>(fileName, fallback);
   if (seedData.length === 0) return [];
   const batch = writeBatch(db);
-  for (const item of seedData) batch.set(doc(db, colName, item.id), item);
+  for (const item of seedData) batch.set(doc(db, colName, item.id), stripUndefined(item) as object);
   await batch.commit();
   return seedData;
 }
@@ -75,7 +92,7 @@ async function getOrSeedSingleton<T>(
   const snap = await getDoc(ref);
   if (snap.exists()) return snap.data() as T;
   const seedData = await readJsonFallback<T>(fileName, fallback);
-  await setDoc(ref, seedData as object);
+  await setDoc(ref, stripUndefined(seedData) as object);
   return seedData;
 }
 
@@ -86,7 +103,7 @@ async function replaceCollection<T extends { id: string }>(colName: string, item
   const currentIds = new Set(current.docs.map((d) => d.id));
   const batch = writeBatch(db);
   for (const item of items) {
-    batch.set(doc(db, colName, item.id), item);
+    batch.set(doc(db, colName, item.id), stripUndefined(item) as object);
     currentIds.delete(item.id);
   }
   for (const id of currentIds) {
@@ -184,7 +201,7 @@ export async function saveFaqs(faqs: FAQ[]) {
   await replaceCollection(COL.faqs, faqs);
 }
 export async function saveSettings(settings: Settings) {
-  await setDoc(doc(getFirestoreDb(), COL.settings, SETTINGS_DOC), settings);
+  await setDoc(doc(getFirestoreDb(), COL.settings, SETTINGS_DOC), stripUndefined(settings) as object);
 }
 export async function saveGiftEnquiries(list: GiftEnquiry[]) {
   await replaceCollection(COL.giftEnquiries, list);
@@ -199,7 +216,7 @@ export async function saveCollections(list: Collection[]) {
 /* -------- Convenience helpers -------- */
 
 export async function upsertProduct(product: Product) {
-  await setDoc(doc(getFirestoreDb(), COL.products, product.id), product);
+  await setDoc(doc(getFirestoreDb(), COL.products, product.id), stripUndefined(product) as object);
 }
 
 export async function deleteProduct(id: string) {
