@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { FeatureRow } from "@/components/site/FeatureRow";
-import { IMG } from "@/lib/seed";
+import { IMG } from "@/lib/images";
 
 export const metadata = { title: "About" };
 
