@@ -68,7 +68,7 @@ export function ProductForm({
             label="Image URLs (one per line, or comma-separated)"
             rows={4}
             className="mt-4"
-            defaultValue={product?.images.map((i) => i.url).join("\n")}
+            defaultValue={(product?.images ?? []).map((i) => i.url).join("\n")}
             placeholder="https://…\nhttps://…"
           />
           <p className="mt-2 text-xs text-cocoa-400">
@@ -94,19 +94,19 @@ export function ProductForm({
             <Field name="weightGrams" label="Weight (grams)" type="number" defaultValue={product?.weightGrams} />
             <Field name="burnTimeHours" label="Burn time (hours)" type="number" defaultValue={product?.burnTimeHours} />
             <Field name="dimensions" label="Dimensions" defaultValue={product?.dimensions} />
-            <Field name="ingredients" label="Ingredients (comma-separated)" defaultValue={product?.ingredients.join(", ")} />
+            <Field name="ingredients" label="Ingredients (comma-separated)" defaultValue={(product?.ingredients ?? []).join(", ")} />
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-3">
-            <Field name="notesTop" label="Top notes (comma)" defaultValue={product?.fragranceNotes.top.join(", ")} />
-            <Field name="notesHeart" label="Heart notes (comma)" defaultValue={product?.fragranceNotes.heart.join(", ")} />
-            <Field name="notesBase" label="Base notes (comma)" defaultValue={product?.fragranceNotes.base.join(", ")} />
+            <Field name="notesTop" label="Top notes (comma)" defaultValue={(product?.fragranceNotes?.top ?? []).join(", ")} />
+            <Field name="notesHeart" label="Heart notes (comma)" defaultValue={(product?.fragranceNotes?.heart ?? []).join(", ")} />
+            <Field name="notesBase" label="Base notes (comma)" defaultValue={(product?.fragranceNotes?.base ?? []).join(", ")} />
           </div>
           <Textarea
             name="careInstructions"
             label="Candle care (one per line)"
             rows={3}
             className="mt-4"
-            defaultValue={product?.careInstructions.join("\n")}
+            defaultValue={(product?.careInstructions ?? []).join("\n")}
           />
         </Card>
 
@@ -115,7 +115,7 @@ export function ProductForm({
           <div className="mt-4 grid gap-4">
             <Field name="seoTitle" label="SEO title" defaultValue={product?.seoTitle} />
             <Textarea name="seoDescription" label="Meta description" rows={3} defaultValue={product?.seoDescription} />
-            <Field name="tags" label="Keywords / tags (comma)" defaultValue={product?.tags.join(", ")} />
+            <Field name="tags" label="Keywords / tags (comma)" defaultValue={(product?.tags ?? []).join(", ")} />
           </div>
         </Card>
       </div>
@@ -188,7 +188,7 @@ export function ProductForm({
                     <label key={c.id} className="flex items-center gap-2 text-sm text-cocoa-700">
                       <input
                         type="checkbox"
-                        defaultChecked={product?.collections.includes(c.slug)}
+                        defaultChecked={(product?.collections ?? []).includes(c.slug)}
                         onChange={onToggle(c.slug)}
                       />
                       {c.title}
@@ -206,7 +206,7 @@ export function ProductForm({
                           <label key={child.id} className="flex items-center gap-2 text-sm text-cocoa-500">
                             <input
                               type="checkbox"
-                              defaultChecked={product?.collections.includes(child.slug)}
+                              defaultChecked={(product?.collections ?? []).includes(child.slug)}
                               onChange={onToggle(child.slug)}
                             />
                             {child.title}
