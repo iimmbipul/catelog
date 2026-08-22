@@ -11,6 +11,7 @@ import {
   setDoc,
   writeBatch,
 } from "firebase/firestore";
+import { unstable_noStore as noStore } from "next/cache";
 import { COL, SETTINGS_DOC, getFirestoreDb } from "./firebase";
 import type {
   Banner,
@@ -45,6 +46,9 @@ function stripUndefined<T>(value: T): T {
 }
 
 async function listAll<T extends { id: string }>(colName: string): Promise<T[]> {
+  // Opt every calling page out of the Next.js Data Cache — Firestore is the
+  // source of truth and must be re-read on each request.
+  noStore();
   const snap = await getDocs(fsCollection(getFirestoreDb(), colName));
   return snap.docs.map((d) => d.data() as T);
 }
@@ -91,6 +95,7 @@ export async function getProductBySlug(slug: string) {
   return (await getProducts()).find((p) => p.slug === slug) ?? null;
 }
 export async function getProductById(id: string) {
+  noStore();
   const snap = await getDoc(doc(getFirestoreDb(), COL.products, id));
   return snap.exists() ? (snap.data() as Product) : null;
 }
@@ -101,6 +106,7 @@ export async function getCollectionBySlug(slug: string) {
   return (await getCollections()).find((c) => c.slug === slug) ?? null;
 }
 export async function getSettings(): Promise<Settings> {
+  noStore();
   const snap = await getDoc(doc(getFirestoreDb(), COL.settings, SETTINGS_DOC));
   return snap.exists() ? (snap.data() as Settings) : DEFAULT_SETTINGS;
 }
