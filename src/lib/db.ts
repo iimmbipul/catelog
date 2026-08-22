@@ -33,7 +33,26 @@ import type {
 
 const DATA_DIR = path.join(process.cwd(), "data");
 
+/* Once a collection is auto-seeded from bundled data, we set a flag in
+ * _meta/seeded so we never accidentally re-seed it on a deliberate wipe. */
+const META_COL = "_meta";
+const META_DOC = "seeded";
+
 /* -------- helpers -------- */
+
+async function hasBeenSeeded(colName: string): Promise<boolean> {
+  const snap = await getDoc(doc(getFirestoreDb(), META_COL, META_DOC));
+  if (!snap.exists()) return false;
+  const data = snap.data() as Record<string, boolean> | undefined;
+  return !!data?.[colName];
+}
+
+async function markSeeded(colName: string): Promise<void> {
+  const ref = doc(getFirestoreDb(), META_COL, META_DOC);
+  const snap = await getDoc(ref);
+  const cur = snap.exists() ? (snap.data() as Record<string, boolean>) : {};
+  await setDoc(ref, { ...cur, [colName]: true });
+}
 
 /* Firestore rejects any field whose value is exactly `undefined`. Strip
  * them recursively (arrays keep their items, objects lose the undefined keys). */
@@ -61,8 +80,10 @@ async function readJsonFallback<T>(fileName: string, defaults: T): Promise<T> {
   }
 }
 
-/* Get all docs of a collection. If Firestore has none, seed the collection
- * from the local JSON file (or the bundled seed) and return the seeded list. */
+/* Get all docs of a collection.
+ * - If Firestore has docs, return them.
+ * - If empty AND the collection was previously seeded, return empty (respect deletions).
+ * - If empty AND never seeded, run first-time seed from local JSON / bundled seed. */
 async function listOrSeed<T extends { id: string }>(
   colName: string,
   fileName: string,
@@ -71,13 +92,21 @@ async function listOrSeed<T extends { id: string }>(
   const db = getFirestoreDb();
   const snap = await getDocs(fsCollection(db, colName));
   if (!snap.empty) {
+    // Retroactively mark existing populated collections so a future wipe
+    // does not silently re-seed them. Idempotent — cheap after the first run.
+    if (!(await hasBeenSeeded(colName))) {
+      await markSeeded(colName);
+    }
     return snap.docs.map((d) => d.data() as T);
   }
+  if (await hasBeenSeeded(colName)) return [];
   const seedData = await readJsonFallback<T[]>(fileName, fallback);
-  if (seedData.length === 0) return [];
-  const batch = writeBatch(db);
-  for (const item of seedData) batch.set(doc(db, colName, item.id), stripUndefined(item) as object);
-  await batch.commit();
+  if (seedData.length > 0) {
+    const batch = writeBatch(db);
+    for (const item of seedData) batch.set(doc(db, colName, item.id), stripUndefined(item) as object);
+    await batch.commit();
+  }
+  await markSeeded(colName);
   return seedData;
 }
 
@@ -90,9 +119,16 @@ async function getOrSeedSingleton<T>(
   const db = getFirestoreDb();
   const ref = doc(db, colName, docId);
   const snap = await getDoc(ref);
-  if (snap.exists()) return snap.data() as T;
+  if (snap.exists()) {
+    if (!(await hasBeenSeeded(colName))) {
+      await markSeeded(colName);
+    }
+    return snap.data() as T;
+  }
+  if (await hasBeenSeeded(colName)) return fallback;
   const seedData = await readJsonFallback<T>(fileName, fallback);
   await setDoc(ref, stripUndefined(seedData) as object);
+  await markSeeded(colName);
   return seedData;
 }
 
