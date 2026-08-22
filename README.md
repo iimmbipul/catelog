@@ -1,67 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# White & Wick
 
-## Getting Started
+A premium, boutique e-commerce site for a hand-poured candle brand — with a full storefront **and** a working admin panel, wired to the same data store.
 
-First, run the development server:
+Built with **Next.js 15 (App Router) + React 19 + TypeScript + Tailwind CSS**. Data is persisted to JSON files under `/data` for the demo; swap the module in `src/lib/db.ts` for Postgres / Supabase when you're ready.
+
+---
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The admin panel lives at http://localhost:3000/admin.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Username:** `admin`
+- **Password:** `whiteandwick`
 
-### Google Sheets integration
+Anything you change in the admin panel (products, prices, stock, orders, coupons, banners, FAQs, the hero) is written to `/data/*.json` and shows up on the storefront instantly.
 
-This project can load catalog data from a Google Sheet instead of the local `public/catalog.json` file. There are two supported methods:
+---
 
-- Public CSV export (no API key): set the `SHEETS_SPREADSHEET_ID` environment variable to your spreadsheet ID. The API route will fetch the CSV export and transform rows into the app's candle objects.
-- Google Sheets API (private sheets): set both `SHEETS_SPREADSHEET_ID` and `SHEETS_API_KEY` environment variables. The app will call the Sheets API `spreadsheets.values` endpoint for range `Sheet1` by default.
+## What's inside
 
-Environment variables (create `.env.local`):
+### Storefront
 
-SHEETS_SPREADSHEET_ID=your_spreadsheet_id_here
-SHEETS_API_KEY=optional_api_key_for_private_sheets
-SHEETS_RANGE=optional_range_like_Sheet1!A1:G100
+- Home with hero, featured collections, best sellers, brand story, gifting banner, reviews, Instagram gallery, newsletter
+- Shop listing with sidebar filters (collection, category, fragrance, price, availability) and sorting
+- Product detail with image gallery, quantity, add to cart, buy now, wishlist, WhatsApp enquiry, information tabs, reviews, related & also-loved
+- Collections index + individual collection pages with hero
+- Cart page + slide-in cart drawer, coupon codes, gift message, order notes, live discount + free-shipping logic
+- Full checkout with contact + shipping address + payment method placeholder, server action creates a real order
+- Order confirmation page with tracking info
+- Search overlay + `/search?q=` results page
+- Wishlist (localStorage), account page, saved orders
+- Gifting page with custom-hamper enquiry form (writes to admin)
+- About, Contact, FAQs, Shipping, Returns, Privacy, Terms
 
-If `SHEETS_SPREADSHEET_ID` is not set or Sheets fetch fails, the app falls back to `public/catalog.json` automatically.
+### Admin panel
 
-Make sure the sheet's first row contains headers that match the keys used by the app (for example: `id,name,image,price,discount,description,fragrance,bestSeller,trending,soldout,left`).
+- Login (`/admin/login`) → cookie-based auth → middleware guards `/admin/*`
+- Dashboard with sales stats, revenue chart, recent orders, best sellers, low-stock, gift enquiries
+- Products — table, create, edit, duplicate, delete, MRP/price/discount live preview, image URL manager, SEO fields, best-seller/new-arrival flags, status
+- Inventory — inline stock editor, low-stock / OOS flagging
+- Orders — table, filters by status, order detail with status transitions (order + payment)
+- Customers — table with orders count, total spend, last order
+- Coupons — full CRUD (percent + fixed, min order, max discount, usage limits, per-customer limits, active toggle)
+- Collections — grid view with cover + count
+- Banners — homepage promotional banners
+- Homepage CMS — hero heading/subheading/image, CTAs, announcement bar
+- FAQs — full CRUD
+- Reviews — approve/hide/delete
+- Gift enquiries — inbound custom-hamper requests with status
+- Analytics — revenue, AOV, repeat customers, sales by product & collection
+- Settings — free-shipping threshold, socials, contact, integrations notes
 
-Service account (private sheet) setup
+---
 
-If your sheet is private, create a Google Cloud service account and download the JSON key. Then either:
+## Architecture
 
-- Set `SERVICE_ACCOUNT_FILE` in `.env.local` to the absolute path of the JSON key file on the server where Next runs. Example:
+- `src/app/(site)` — storefront (public)
+- `src/app/admin` — admin panel (auth-gated by `src/middleware.ts`)
+- `src/lib/db.ts` — reads/writes JSON store under `/data`
+- `src/lib/seed.ts` — demo products, collections, customers, orders, coupons, banners, reviews, FAQs, gift enquiries, settings
+- `src/lib/store.ts` — Zustand stores for cart / wishlist / UI
+- `src/components/site/*` — storefront components
+- `src/components/admin/*` — admin components
 
-SERVICE_ACCOUNT_FILE=C:\Users\you\secrets\catelog-service-account.json
+Server actions live next to the pages that use them (`checkout/actions.ts`, `admin/products/actions.ts`, etc.) and call `revalidatePath` so storefront updates instantly after edits.
 
-- Or copy the entire JSON and set it as `SERVICE_ACCOUNT_KEY` in `.env.local` (safe for local dev, not recommended for public repos). Example:
+---
 
-SERVICE_ACCOUNT_KEY="{...the JSON contents...}"
+## Wiring real integrations
 
-Finally, share the sheet with the service account email (example you provided: `catelog@extreme-pixel-475420-d5.iam.gserviceaccount.com`) as Viewer. The API route will automatically detect the service account key and use it to read the sheet.
+- **Razorpay** — plug your key into an env, generate an order in `checkout/actions.ts::placeOrder` before returning; use the Razorpay Checkout on the client to complete.
+- **WhatsApp Cloud API / SMS / Email** — hook into a `lib/notifications.ts` module and call from `placeOrder` and `updateOrderAction`.
+- **Cloud storage for images** — replace the URL-based image field in `ProductForm` with S3 / Supabase Storage upload.
+- **Database** — swap `src/lib/db.ts` for your Postgres or Supabase client. The public API (`getProducts`, `saveOrders`, etc.) is stable, so pages/admin don't need to change.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## SEO
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Per-product & per-collection metadata (title, description, OG image) generated in `generateMetadata`
+- Clean URLs — `/product/rose-bloom-candle`, `/collections/best-sellers`
+- Breadcrumbs on every relevant page
+- Ready for `sitemap.ts` / `robots.ts` — add them under `src/app/`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Notes on the demo store
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Data lives in `/data/*.json`. Deleting these files re-seeds from `src/lib/seed.ts` on next request.
+- Placeholder photography is loaded from Unsplash (whitelisted in `next.config.ts`). Replace with your own product photography when ready.
+- Cart & wishlist live in `localStorage`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
