@@ -199,6 +199,14 @@ export interface GiftEnquiry {
   status: "new" | "in_progress" | "closed";
 }
 
+export interface InstagramPost {
+  id: string;
+  image: string;
+  link: string;
+  caption?: string;
+  order: number;
+}
+
 export interface Settings {
   freeShippingAbove: number;
   currency: "INR";

@@ -20,6 +20,7 @@ import type {
   Customer,
   FAQ,
   GiftEnquiry,
+  InstagramPost,
   Order,
   Product,
   Review,
@@ -170,6 +171,10 @@ export async function getFaqs() {
 export async function getGiftEnquiries() {
   return listAll<GiftEnquiry>(COL.giftEnquiries);
 }
+export async function getInstagramPosts() {
+  const all = await listAll<InstagramPost>(COL.instagramPosts);
+  return all.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
 
 /* -------- Public write API -------- */
 
@@ -223,6 +228,9 @@ export async function saveCustomers(list: Customer[]) {
 }
 export async function saveCollections(list: Collection[]) {
   await replaceCollection(COL.collections, list);
+}
+export async function saveInstagramPosts(list: InstagramPost[]) {
+  await replaceCollection(COL.instagramPosts, list);
 }
 
 /* -------- Single-doc helpers -------- */

@@ -42,6 +42,7 @@ export const COL = {
   faqs: "faqs",
   giftEnquiries: "giftEnquiries",
   settings: "settings",
+  instagramPosts: "instagramPosts",
 } as const;
 
 /* Doc id used for the single settings document. */
