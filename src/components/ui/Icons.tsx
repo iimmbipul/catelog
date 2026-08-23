@@ -90,6 +90,21 @@ export function Instagram({ className, ...p }: P) {
     </svg>
   );
 }
+export function Youtube({ className, ...p }: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" className={cn(base, className)} {...p}>
+      <rect x="2.5" y="6" width="19" height="12" rx="3" />
+      <path d="M10 9.5v5l4.5-2.5L10 9.5Z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+export function Facebook({ className, ...p }: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" className={cn(base, className)} {...p}>
+      <path d="M14 21v-8h2.5l.5-3h-3V8c0-1 .3-1.6 1.7-1.6H17V3.7A20 20 0 0 0 14.5 3.5C12.3 3.5 11 4.8 11 7v3H8v3h3v8h3Z" />
+    </svg>
+  );
+}
 export function Whatsapp({ className, ...p }: P) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" className={cn(base, className)} {...p}>

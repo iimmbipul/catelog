@@ -9,7 +9,7 @@ import { Reviews } from "@/components/site/Reviews";
 import { Gallery } from "@/components/site/Gallery";
 import { getCollections, getProducts, getReviews, getSettings } from "@/lib/db";
 import { IMG } from "@/lib/images";
-import { FloralSprig, LeafBranch } from "@/components/site/Illustrations";
+import { FloralSprig } from "@/components/site/Illustrations";
 
 export default async function HomePage() {
   const [products, collections, reviews, settings] = await Promise.all([
@@ -23,11 +23,7 @@ export default async function HomePage() {
   const newArrivals = products.filter((p) => p.newArrival).slice(0, 6);
 
   return (
-    <div className="home-canvas relative overflow-hidden">
-      {/* Ambient background flourishes — subtle, positioned, non-interactive */}
-      <LeafBranch className="pointer-events-none absolute -left-16 top-[42vh] hidden h-24 w-72 opacity-40 lg:block" />
-      <LeafBranch className="pointer-events-none absolute -right-20 top-[80vh] hidden h-24 w-72 opacity-40 lg:block" style={{ transform: "scaleX(-1)" }} />
-
+    <>
       <Hero settings={settings} />
 
       <SprigDivider />
@@ -57,7 +53,7 @@ export default async function HomePage() {
 
       <SprigDivider />
 
-      <StorySection image={IMG.handpour} />
+      <StorySection fallbackImage={IMG.handpour} story={settings.homepage.story} />
 
       <section className="container-page mt-28">
         <SectionHeader
@@ -69,14 +65,14 @@ export default async function HomePage() {
         <ProductCarousel products={newArrivals} />
       </section>
 
-      <GiftingBanner image={IMG.gifting} />
+      <GiftingBanner fallbackImage={IMG.gifting} banner={settings.homepage.giftingBanner} />
 
       <SprigDivider />
 
       <Reviews reviews={reviews} />
 
       <Gallery />
-    </div>
+    </>
   );
 }
 

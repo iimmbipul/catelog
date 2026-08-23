@@ -4,18 +4,36 @@ import { getSettings, saveSettings } from "@/lib/db";
 
 export async function saveHomepageAction(fd: FormData) {
   const s = await getSettings();
+  const str = (name: string, fallback = "") => String(fd.get(name) ?? fallback);
   const next = {
     ...s,
-    announcementBar: String(fd.get("announcementBar") ?? s.announcementBar),
+    announcementBar: str("announcementBar", s.announcementBar),
     homepage: {
       ...s.homepage,
-      heroHeading: String(fd.get("heroHeading") ?? s.homepage.heroHeading),
-      heroSubheading: String(fd.get("heroSubheading") ?? s.homepage.heroSubheading),
-      heroImage: String(fd.get("heroImage") ?? s.homepage.heroImage),
-      heroCtaLabel: String(fd.get("heroCtaLabel") ?? s.homepage.heroCtaLabel),
-      heroCtaHref: String(fd.get("heroCtaHref") ?? s.homepage.heroCtaHref),
-      secondaryCtaLabel: String(fd.get("secondaryCtaLabel") ?? s.homepage.secondaryCtaLabel),
-      secondaryCtaHref: String(fd.get("secondaryCtaHref") ?? s.homepage.secondaryCtaHref),
+      heroHeading: str("heroHeading", s.homepage.heroHeading),
+      heroSubheading: str("heroSubheading", s.homepage.heroSubheading),
+      heroImage: str("heroImage", s.homepage.heroImage),
+      heroCtaLabel: str("heroCtaLabel", s.homepage.heroCtaLabel),
+      heroCtaHref: str("heroCtaHref", s.homepage.heroCtaHref),
+      secondaryCtaLabel: str("secondaryCtaLabel", s.homepage.secondaryCtaLabel),
+      secondaryCtaHref: str("secondaryCtaHref", s.homepage.secondaryCtaHref),
+      story: {
+        eyebrow: str("storyEyebrow"),
+        heading: str("storyHeading"),
+        body1: str("storyBody1"),
+        body2: str("storyBody2"),
+        image: str("storyImage"),
+        ctaLabel: str("storyCtaLabel"),
+        ctaHref: str("storyCtaHref"),
+      },
+      giftingBanner: {
+        eyebrow: str("giftEyebrow"),
+        heading: str("giftHeading"),
+        body: str("giftBody"),
+        image: str("giftImage"),
+        ctaLabel: str("giftCtaLabel"),
+        ctaHref: str("giftCtaHref"),
+      },
     },
   };
   await saveSettings(next);

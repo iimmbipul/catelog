@@ -204,6 +204,7 @@ export interface Settings {
     whatsapp: string;
     pinterest?: string;
     facebook?: string;
+    youtube?: string;
   };
   contact: {
     email: string;
@@ -218,6 +219,23 @@ export interface Settings {
     heroCtaHref: string;
     secondaryCtaLabel: string;
     secondaryCtaHref: string;
+    story?: {
+      eyebrow?: string;
+      heading?: string;
+      body1?: string;
+      body2?: string;
+      image?: string;
+      ctaLabel?: string;
+      ctaHref?: string;
+    };
+    giftingBanner?: {
+      eyebrow?: string;
+      heading?: string;
+      body?: string;
+      image?: string;
+      ctaLabel?: string;
+      ctaHref?: string;
+    };
   };
   /* About-page content — every field editable in /admin/about. */
   about?: {

@@ -33,9 +33,10 @@ export function SettingsForm({ settings }: { settings: Settings }) {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Field name="instagram" label="Instagram URL" defaultValue={settings.socials.instagram} />
+        <Field name="youtube" label="YouTube URL" defaultValue={settings.socials.youtube} />
+        <Field name="facebook" label="Facebook URL" defaultValue={settings.socials.facebook} />
         <Field name="whatsapp" label="WhatsApp URL" defaultValue={settings.socials.whatsapp} />
         <Field name="pinterest" label="Pinterest URL" defaultValue={settings.socials.pinterest} />
-        <Field name="facebook" label="Facebook URL" defaultValue={settings.socials.facebook} />
       </div>
 
       <button disabled={pending} className="mt-2 rounded-full bg-cocoa-700 px-8 py-3 text-sm uppercase tracking-widish text-ivory-50 hover:bg-cocoa-500 disabled:opacity-50">

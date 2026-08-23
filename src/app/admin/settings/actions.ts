@@ -13,6 +13,7 @@ export async function saveSettingsAction(fd: FormData) {
       whatsapp: String(fd.get("whatsapp") ?? s.socials.whatsapp),
       pinterest: String(fd.get("pinterest") ?? "") || undefined,
       facebook: String(fd.get("facebook") ?? "") || undefined,
+      youtube: String(fd.get("youtube") ?? "") || undefined,
     },
     contact: {
       email: String(fd.get("email") ?? s.contact.email),

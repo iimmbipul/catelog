@@ -1,11 +1,20 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { Instagram, Whatsapp } from "@/components/ui/Icons";
+import { Facebook, Instagram, Whatsapp, Youtube } from "@/components/ui/Icons";
+import { getSettings } from "@/lib/db";
 
 const col = "space-y-3 text-sm text-cocoa-500";
 const heading = "eyebrow text-cocoa-400";
 
-export function Footer() {
+export async function Footer() {
+  const settings = await getSettings();
+  const s = settings.socials;
+  const socials: { href: string; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [];
+  if (s.instagram?.trim()) socials.push({ href: s.instagram, label: "Instagram", Icon: Instagram });
+  if (s.youtube?.trim()) socials.push({ href: s.youtube, label: "YouTube", Icon: Youtube });
+  if (s.facebook?.trim()) socials.push({ href: s.facebook, label: "Facebook", Icon: Facebook });
+  if (s.whatsapp?.trim()) socials.push({ href: s.whatsapp, label: "WhatsApp", Icon: Whatsapp });
+
   return (
     <footer className="mt-24 border-t hairline bg-ivory-100/70">
       <div className="container-page py-16">
@@ -16,14 +25,22 @@ export function Footer() {
               White & Wick creates thoughtfully crafted candles designed to
               turn ordinary moments into warm, beautiful rituals.
             </p>
-            <div className="flex items-center gap-3">
-              <a href="https://instagram.com/whiteandwick" className="grid h-9 w-9 place-items-center rounded-full border hairline text-cocoa-500 hover:text-cocoa-700">
-                <Instagram />
-              </a>
-              <a href="https://wa.me/919999999999" className="grid h-9 w-9 place-items-center rounded-full border hairline text-cocoa-500 hover:text-cocoa-700">
-                <Whatsapp />
-              </a>
-            </div>
+            {socials.length > 0 && (
+              <div className="flex items-center gap-3">
+                {socials.map(({ href, label, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="grid h-9 w-9 place-items-center rounded-full border hairline text-cocoa-500 hover:text-cocoa-700"
+                  >
+                    <Icon />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
@@ -58,11 +75,10 @@ export function Footer() {
               <li><Link className="hover:text-cocoa-700" href="/account">My account</Link></li>
             </ul>
           </div>
-
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-between gap-3 border-t hairline pt-6 sm:flex-row text-xs text-cocoa-400">
-          <p>© {new Date().getFullYear()} White & Wick. Hand-poured with love in Mumbai.</p>
+          <p>© {new Date().getFullYear()} White & Wick. Hand-poured with love in India.</p>
           <p>Made with soy wax, cotton wicks, and care.</p>
         </div>
       </div>
