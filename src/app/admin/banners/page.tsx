@@ -22,7 +22,7 @@ export default async function BannersPage() {
               <Image src={b.image} alt={b.title} fill className="object-cover" sizes="(min-width: 768px) 50vw, 100vw" />
             </div>
             <div className="p-5">
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="eyebrow">{b.active ? "Active" : "Inactive"}</p>
                   <p className="mt-2 font-serif text-xl text-cocoa-700">{b.title}</p>
@@ -31,6 +31,9 @@ export default async function BannersPage() {
               </div>
               {b.subtitle && <p className="mt-2 text-sm text-cocoa-500">{b.subtitle}</p>}
               <p className="mt-3 text-xs text-cocoa-400">→ {b.link} · CTA: {b.cta}</p>
+              <div className="mt-4">
+                <BannerActions banner={b} />
+              </div>
             </div>
           </Card>
         ))}
