@@ -17,6 +17,7 @@ const NAV = [
   { href: "/admin/banners", label: "Banners" },
   { href: "/admin/homepage", label: "Homepage" },
   { href: "/admin/about", label: "About page" },
+  { href: "/admin/instagram", label: "Instagram gallery" },
   { href: "/admin/faqs", label: "FAQs" },
   { href: "/admin/analytics", label: "Analytics" },
   { href: "/admin/settings", label: "Settings" },

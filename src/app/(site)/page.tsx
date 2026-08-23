@@ -7,16 +7,17 @@ import { StorySection } from "@/components/site/StorySection";
 import { GiftingBanner } from "@/components/site/GiftingBanner";
 import { Reviews } from "@/components/site/Reviews";
 import { Gallery } from "@/components/site/Gallery";
-import { getCollections, getProducts, getReviews, getSettings } from "@/lib/db";
+import { getCollections, getInstagramPosts, getProducts, getReviews, getSettings } from "@/lib/db";
 import { IMG } from "@/lib/images";
 import { FloralSprig } from "@/components/site/Illustrations";
 
 export default async function HomePage() {
-  const [products, collections, reviews, settings] = await Promise.all([
+  const [products, collections, reviews, settings, instagramPosts] = await Promise.all([
     getProducts(),
     getCollections(),
     getReviews(),
     getSettings(),
+    getInstagramPosts(),
   ]);
 
   const bestSellers = products.filter((p) => p.bestSeller).slice(0, 6);
@@ -103,7 +104,11 @@ export default async function HomePage() {
 
       <Reviews reviews={reviews} />
 
-      <Gallery />
+      <Gallery
+        posts={instagramPosts}
+        handle={settings.socials.instagram?.split("/").filter(Boolean).pop() || "whiteandwick"}
+        profileUrl={settings.socials.instagram || "https://instagram.com/whiteandwick"}
+      />
     </>
   );
 }
