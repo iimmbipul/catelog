@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, Bag, Whatsapp, ChevronDown, Truck, Leaf, Flame, Package } from "@/components/ui/Icons";
+import { Heart, Bag, ChevronDown, Truck, Leaf, Flame, Package } from "@/components/ui/Icons";
 import { cn } from "@/lib/cn";
 import { money, pct, computeDiscount } from "@/lib/format";
 import type { Product, Review } from "@/lib/types";
@@ -209,13 +209,6 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
         >
           Buy it now
         </button>
-
-        <a
-          href="https://wa.me/919999999999"
-          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border hairline py-3 text-xs uppercase tracking-widish text-cocoa-500 hover:text-cocoa-700"
-        >
-          <Whatsapp /> WhatsApp enquiry
-        </a>
 
         <div className="mt-8 grid grid-cols-2 gap-3 text-xs text-cocoa-500">
           <ShipRow icon={Truck} title="Free shipping" body="On orders over ₹999" />

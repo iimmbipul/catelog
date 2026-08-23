@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Arrow, Star } from "@/components/ui/Icons";
+import { Arrow } from "@/components/ui/Icons";
 import type { Settings } from "@/lib/types";
 import { HangingVine, TulipCluster, TinySparkle, Bee, CandleHeroScene } from "./Illustrations";
 
@@ -72,14 +72,6 @@ export function Hero({ settings }: { settings: Settings }) {
               </Link>
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-cocoa-500">
-              <div className="flex text-cocoa-700">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} filled />
-                ))}
-              </div>
-              <span className="text-xs">Rated 4.9 on 1200+ reviews</span>
-            </div>
           </div>
         </div>
       </div>

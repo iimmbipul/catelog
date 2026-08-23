@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { Facebook, Instagram, Whatsapp, Youtube } from "@/components/ui/Icons";
+import { Facebook, Instagram, Youtube } from "@/components/ui/Icons";
 import { getSettings } from "@/lib/db";
 
 const col = "space-y-3 text-sm text-cocoa-500";
@@ -13,7 +13,7 @@ export async function Footer() {
   if (s.instagram?.trim()) socials.push({ href: s.instagram, label: "Instagram", Icon: Instagram });
   if (s.youtube?.trim()) socials.push({ href: s.youtube, label: "YouTube", Icon: Youtube });
   if (s.facebook?.trim()) socials.push({ href: s.facebook, label: "Facebook", Icon: Facebook });
-  if (s.whatsapp?.trim()) socials.push({ href: s.whatsapp, label: "WhatsApp", Icon: Whatsapp });
+  // WhatsApp intentionally excluded from customer-facing surfaces.
 
   return (
     <footer className="mt-24 border-t hairline bg-ivory-100/70">
