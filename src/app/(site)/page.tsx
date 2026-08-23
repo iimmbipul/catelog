@@ -22,6 +22,25 @@ export default async function HomePage() {
   const bestSellers = products.filter((p) => p.bestSeller).slice(0, 6);
   const newArrivals = products.filter((p) => p.newArrival).slice(0, 6);
 
+  // Any collection admin has "Pinned to home" appears above Best Sellers.
+  // Products roll up from the collection itself + any child categories.
+  const pinned = collections.filter((c) => c.pinToHome);
+  const pinnedSections = pinned
+    .map((c) => {
+      const kids = collections.filter((k) => k.parentSlug === c.slug).map((k) => k.slug);
+      const scope = new Set([c.slug, ...kids]);
+      const items = products
+        .filter(
+          (p) =>
+            p.collections.some((s) => scope.has(s)) &&
+            p.status !== "archived" &&
+            p.status !== "draft",
+        )
+        .slice(0, 6);
+      return { c, items };
+    })
+    .filter((s) => s.items.length > 0);
+
   return (
     <>
       <Hero settings={settings} />
@@ -38,6 +57,19 @@ export default async function HomePage() {
         />
         <CollectionsGrid collections={collections} />
       </section>
+
+      {pinnedSections.map(({ c, items }) => (
+        <section key={c.id} className="container-page mt-28">
+          <SectionHeader
+            eyebrow={c.subtitle || "Featured"}
+            title={c.title}
+            description={c.description}
+            href={`/collections/${c.slug}`}
+            cta={`Shop ${c.title}`}
+          />
+          <ProductCarousel products={items} />
+        </section>
+      ))}
 
       <section className="container-page mt-28">
         <SectionHeader

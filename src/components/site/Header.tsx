@@ -144,7 +144,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           </ul>
         </nav>
         <div className="border-t hairline px-5 py-4 text-xs text-cocoa-400">
-          © White & Wick · Hand-poured in Mumbai
+          © White & Wick · Hand-poured in Bengaluru
         </div>
       </aside>
     </div>

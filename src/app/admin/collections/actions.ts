@@ -3,6 +3,17 @@ import { revalidatePath } from "next/cache";
 import { getCollections, saveCollections } from "@/lib/db";
 import type { Collection } from "@/lib/types";
 
+export async function toggleCollectionPinAction(id: string) {
+  const list = await getCollections();
+  const idx = list.findIndex((c) => c.id === id);
+  if (idx < 0) return { ok: false };
+  list[idx] = { ...list[idx], pinToHome: !list[idx].pinToHome };
+  await saveCollections(list);
+  revalidatePath("/");
+  revalidatePath("/admin/collections");
+  return { ok: true, pinned: !!list[idx].pinToHome };
+}
+
 function slugify(s: string) {
   return s
     .toLowerCase()
@@ -32,6 +43,7 @@ export async function saveCollectionAction(fd: FormData) {
     featured: fd.get("featured") === "on",
     productIds: existing?.productIds ?? [],
     parentSlug: parentSlugRaw && parentSlugRaw !== "__none" ? parentSlugRaw : undefined,
+    pinToHome: fd.get("pinToHome") === "on",
   };
 
   const idx = list.findIndex((c) => c.id === id);
