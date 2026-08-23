@@ -17,7 +17,7 @@ export function CollectionsGrid({ collections }: { collections: Collection[] }) 
             src={c.image}
             alt={c.title}
             fill
-            className="object-cover transition-transform duration-[900ms] ease-expo group-hover:scale-105"
+            className="object-contain transition-transform duration-[900ms] ease-expo group-hover:scale-105"
             sizes={i === 0 ? "(min-width: 640px) 50vw, 100vw" : "(min-width: 640px) 25vw, 100vw"}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-cocoa-700/50 via-transparent to-transparent" />

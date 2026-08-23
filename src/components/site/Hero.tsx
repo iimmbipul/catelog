@@ -36,14 +36,6 @@ export function Hero({ settings }: { settings: Settings }) {
           ) : (
             <CandleHeroScene className="absolute inset-0 h-full w-full" />
           )}
-          <div className="absolute inset-x-6 bottom-6 flex items-center justify-between text-xs">
-            <div className="rounded-full bg-cocoa-700/85 px-3 py-1 text-ivory-50 backdrop-blur">
-              Signature — Rose Bloom
-            </div>
-            <div className="hidden rounded-full bg-cocoa-700/85 px-3 py-1 text-ivory-50 backdrop-blur sm:block">
-              Poured 08.26 · Batch №118
-            </div>
-          </div>
         </div>
 
         <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl border hairline bg-ivory-50/80 p-8 lg:p-12">

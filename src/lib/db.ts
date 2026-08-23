@@ -79,6 +79,26 @@ const DEFAULT_SETTINGS: Settings = {
     heroCtaHref: "/shop",
     secondaryCtaLabel: "Explore Gifting",
     secondaryCtaHref: "/gifting",
+    story: {
+      eyebrow: "Our story",
+      heading: "Made slowly,\n to be lived with.",
+      body1:
+        "White & Wick was born from a love of small, everyday rituals. Every candle we make is hand-poured in small batches, from a wax we blend ourselves, with fragrances crafted by perfumers we love and packaging made with care.",
+      body2:
+        "We're not trying to be the biggest candle in the room. Just the one you keep reaching for.",
+      image: "",
+      ctaLabel: "More about White & Wick",
+      ctaHref: "/about",
+    },
+    giftingBanner: {
+      eyebrow: "Gifting",
+      heading: "Small gifts that\n feel considered.",
+      body:
+        "Hampers for weddings, corporate favours, and thoughtful thank-yous — with free gift-wrap and hand-written cards.",
+      image: "",
+      ctaLabel: "Explore gifting",
+      ctaHref: "/gifting",
+    },
   },
   about: {
     eyebrow: "About White & Wick",
