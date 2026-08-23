@@ -80,6 +80,18 @@ const DEFAULT_SETTINGS: Settings = {
     secondaryCtaLabel: "Explore Gifting",
     secondaryCtaHref: "/gifting",
   },
+  about: {
+    eyebrow: "About White & Wick",
+    heading: "Made slowly, to be lived with.",
+    intro:
+      "We began in 2022 with a copper pot, three friends, and a stubborn idea — that candles should be more than perfume. That they should hold a room, gently.",
+    image: "",
+    craftEyebrow: "Our craft",
+    craftBody:
+      "Everything we make is hand-poured, in small batches, from a soy and coconut wax we blend ourselves. We work with three independent perfumers whose noses we trust — for the notes, and for the restraint. We prefer under-perfumed to over-perfumed. A candle should suggest, not shout.\n\nOur labels are printed on recycled paper near the studio. Our boxes are hand-tied. And every hamper leaves the door with a card written by one of us.",
+    quoteEyebrow: "The house",
+    quote: "Not the biggest candle in the room. The one you keep reaching for.",
+  },
 };
 
 /* -------- Public read API -------- */

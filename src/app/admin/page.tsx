@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="mt-6 grid gap-5 xl:grid-cols-[1.55fr_1fr]">
-        <SalesChart />
+        <SalesChart orders={orders} />
 
         <Card>
           <div className="flex items-center justify-between">
@@ -95,7 +95,7 @@ export default async function AdminDashboard() {
       <div className="mt-6 grid gap-5 xl:grid-cols-[1.4fr_1fr]">
         <Card>
           <div className="flex items-center justify-between">
-            <p className="eyebrow">Best sellers</p>
+            <p className="eyebrow">Top selling (by units)</p>
             <Link href="/admin/products" className="text-xs uppercase tracking-widish text-cocoa-700 link-underline">All products</Link>
           </div>
           <ul className="mt-4 divide-y hairline">

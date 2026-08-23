@@ -11,8 +11,11 @@ export default async function CollectionsIndex() {
   // The index only shows top-level collections; sub-categories are shown
   // inside their parent's page.
   const collections = allCollections.filter((c) => !c.parentSlug);
-  // Parent counts include products from any child category.
+  // Parent counts include products from any child category. Best sellers /
+  // new arrivals are admin-curated via flags, not collection tags.
   const countFor = (slug: string) => {
+    if (slug === "best-sellers") return products.filter((p) => p.bestSeller && p.status !== "archived" && p.status !== "draft").length;
+    if (slug === "new-arrivals") return products.filter((p) => p.newArrival && p.status !== "archived" && p.status !== "draft").length;
     const kids = allCollections.filter((c) => c.parentSlug === slug).map((c) => c.slug);
     const set = new Set([slug, ...kids]);
     return products.filter(

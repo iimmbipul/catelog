@@ -7,7 +7,6 @@ import { StorySection } from "@/components/site/StorySection";
 import { GiftingBanner } from "@/components/site/GiftingBanner";
 import { Reviews } from "@/components/site/Reviews";
 import { Gallery } from "@/components/site/Gallery";
-import { Newsletter } from "@/components/site/Newsletter";
 import { getCollections, getProducts, getReviews, getSettings } from "@/lib/db";
 import { IMG } from "@/lib/images";
 import { FloralSprig, LeafBranch } from "@/components/site/Illustrations";
@@ -77,8 +76,6 @@ export default async function HomePage() {
       <Reviews reviews={reviews} />
 
       <Gallery />
-
-      <Newsletter />
     </div>
   );
 }

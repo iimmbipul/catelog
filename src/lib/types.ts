@@ -219,4 +219,15 @@ export interface Settings {
     secondaryCtaLabel: string;
     secondaryCtaHref: string;
   };
+  /* About-page content — every field editable in /admin/about. */
+  about?: {
+    eyebrow?: string;
+    heading?: string;
+    intro?: string;
+    image?: string;
+    craftEyebrow?: string;
+    craftBody?: string;
+    quoteEyebrow?: string;
+    quote?: string;
+  };
 }

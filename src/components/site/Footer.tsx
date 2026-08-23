@@ -9,7 +9,7 @@ export function Footer() {
   return (
     <footer className="mt-24 border-t hairline bg-ivory-100/70">
       <div className="container-page py-16">
-        <div className="grid gap-12 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
+        <div className="grid gap-12 lg:grid-cols-[2fr_1fr_1fr_1fr]">
           <div className="max-w-sm space-y-5">
             <Logo />
             <p className="text-sm leading-relaxed text-cocoa-500">
@@ -59,22 +59,6 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
-            <p className={heading}>Newsletter</p>
-            <p className="mt-4 text-sm text-cocoa-500">
-              Slow letters — new pours, gifting ideas, occasional discounts.
-            </p>
-            <form className="mt-4 flex overflow-hidden rounded-full border hairline">
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className="flex-1 bg-transparent px-4 py-2.5 text-sm text-cocoa-700 placeholder:text-cocoa-400 focus:outline-none"
-              />
-              <button className="bg-cocoa-700 px-4 py-2 text-xs uppercase tracking-widish text-ivory-50 hover:bg-cocoa-500">
-                Join
-              </button>
-            </form>
-          </div>
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-between gap-3 border-t hairline pt-6 sm:flex-row text-xs text-cocoa-400">

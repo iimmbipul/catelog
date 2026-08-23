@@ -1,7 +1,16 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Arrow, Star } from "@/components/ui/Icons";
 import type { Settings } from "@/lib/types";
 import { HangingVine, TulipCluster, TinySparkle, Bee, CandleHeroScene } from "./Illustrations";
+
+/* True when the admin has explicitly set a hero image (not left blank and not
+ * the bundled picsum placeholder we ship as a safety default in db.ts). */
+function hasCustomHeroImage(url: string | undefined): url is string {
+  if (!url) return false;
+  if (url.includes("picsum.photos")) return false;
+  return /^https?:\/\//i.test(url);
+}
 
 export function Hero({ settings }: { settings: Settings }) {
   const { homepage } = settings;
@@ -12,9 +21,21 @@ export function Hero({ settings }: { settings: Settings }) {
       <HangingVine className="pointer-events-none absolute -top-2 right-2 hidden h-72 w-44 opacity-90 lg:block" style={{ transform: "scaleX(-1)" }} />
 
       <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-12 items-stretch">
-        {/* Illustrated hero scene — replaces the previous photo */}
+        {/* If the admin has set a Hero Image URL in /admin/homepage, render
+         * that photo. Otherwise fall back to the illustrated scene. */}
         <div className="relative overflow-hidden rounded-3xl bg-[color:#f7ecdc] aspect-[5/6] lg:aspect-auto lg:min-h-[560px]">
-          <CandleHeroScene className="absolute inset-0 h-full w-full" />
+          {hasCustomHeroImage(homepage.heroImage) ? (
+            <Image
+              src={homepage.heroImage}
+              alt="White & Wick hero"
+              fill
+              priority
+              className="object-cover"
+              sizes="(min-width: 1024px) 55vw, 100vw"
+            />
+          ) : (
+            <CandleHeroScene className="absolute inset-0 h-full w-full" />
+          )}
           <div className="absolute inset-x-6 bottom-6 flex items-center justify-between text-xs">
             <div className="rounded-full bg-cocoa-700/85 px-3 py-1 text-ivory-50 backdrop-blur">
               Signature — Rose Bloom

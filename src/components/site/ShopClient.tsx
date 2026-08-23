@@ -46,7 +46,11 @@ export function ShopClient({
 
   const filtered = useMemo(() => {
     const items = products.filter((p) => {
-      if (collection !== "all" && !p.collections.includes(collection)) return false;
+      if (collection !== "all") {
+        if (collection === "best-sellers" && !p.bestSeller) return false;
+        else if (collection === "new-arrivals" && !p.newArrival) return false;
+        else if (collection !== "best-sellers" && collection !== "new-arrivals" && !p.collections.includes(collection)) return false;
+      }
       if (subCategories.length && !p.collections.some((s) => subCategories.includes(s))) return false;
       if (types.length && !types.includes(p.category)) return false;
       if (fragrances.length && !p.fragrance.split(",").some((f) => fragrances.includes(f.trim()))) return false;
