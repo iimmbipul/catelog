@@ -1,5 +1,5 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { Facebook, Instagram, Whatsapp, Youtube } from "@/components/ui/Icons";
+import { Facebook, Instagram, Youtube } from "@/components/ui/Icons";
 import { getSettings } from "@/lib/db";
 
 export const metadata = { title: "Contact" };
@@ -11,7 +11,7 @@ export default async function ContactPage() {
   if (s.instagram?.trim()) socials.push({ href: s.instagram, label: "Instagram", Icon: Instagram });
   if (s.youtube?.trim()) socials.push({ href: s.youtube, label: "YouTube", Icon: Youtube });
   if (s.facebook?.trim()) socials.push({ href: s.facebook, label: "Facebook", Icon: Facebook });
-  if (s.whatsapp?.trim()) socials.push({ href: s.whatsapp, label: "WhatsApp", Icon: Whatsapp });
+  // WhatsApp intentionally excluded from Contact page — still shown in the Footer.
 
   return (
     <div className="container-page pt-8 lg:pt-14">
@@ -22,8 +22,8 @@ export default async function ContactPage() {
           <p className="eyebrow">Say hello</p>
           <h1 className="mt-4 heading-serif text-hero">We&apos;d love to hear from you.</h1>
           <p className="mt-4 text-sm text-cocoa-500 max-w-md">
-            For orders, gifting or a plain hello — write to us, message us on WhatsApp, or say
-            hi over Instagram. We reply within a working day.
+            For orders, gifting or a plain hello — write to us or say hi over Instagram.
+            We reply within a working day.
           </p>
 
           <div className="mt-10 space-y-4">

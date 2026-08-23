@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Card } from "@/components/admin/ui";
 import type { Collection } from "@/lib/types";
-import { deleteCollectionAction, saveCollectionAction } from "./actions";
+import { deleteCollectionAction, saveCollectionAction, toggleCollectionPinAction } from "./actions";
 
 type Mode = { kind: "new-collection" } | { kind: "new-category"; parentSlug?: string } | { kind: "edit"; c: Collection } | null;
 
@@ -136,6 +136,9 @@ function CollectionRow({
   onDelete: () => void;
   pending: boolean;
 }) {
+  const router = useRouter();
+  const [pinPending, startPin] = useTransition();
+  const isPinned = !!c.pinToHome;
   return (
     <Card className="!p-0 overflow-hidden">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -148,6 +151,9 @@ function CollectionRow({
             {c.featured && (
               <span className="rounded-full bg-cocoa-700 px-2.5 py-0.5 text-[10px] uppercase tracking-widish text-ivory-50">Featured</span>
             )}
+            {isPinned && (
+              <span className="rounded-full bg-rose-400 px-2.5 py-0.5 text-[10px] uppercase tracking-widish text-ivory-50">Pinned to home</span>
+            )}
             <span className={`rounded-full border hairline px-2.5 py-0.5 text-[10px] uppercase tracking-widish ${c.parentSlug ? "text-cocoa-500" : "text-cocoa-700"}`}>
               {c.parentSlug ? "Category" : "Collection"}
             </span>
@@ -155,7 +161,24 @@ function CollectionRow({
           <p className="mt-1 text-sm text-cocoa-500">{c.subtitle}</p>
           <p className="mt-1 text-xs text-cocoa-400">/{c.slug} · {c.productIds.length} products</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-3 text-xs uppercase tracking-widish">
+        <div className="flex flex-wrap items-center gap-2 px-4 py-3 text-xs uppercase tracking-widish">
+          <button
+            disabled={pinPending}
+            onClick={() =>
+              startPin(async () => {
+                await toggleCollectionPinAction(c.id);
+                router.refresh();
+              })
+            }
+            className={`rounded-full px-3 py-1.5 ${
+              isPinned
+                ? "bg-cocoa-700 text-ivory-50 hover:bg-cocoa-500"
+                : "border hairline text-cocoa-700 hover:bg-cocoa-500/5"
+            }`}
+            title={isPinned ? "Currently featured above Best Sellers on the home page" : "Feature this collection above Best Sellers"}
+          >
+            {pinPending ? "…" : isPinned ? "Unpin from home" : "Pin to home"}
+          </button>
           <Link href={`/collections/${c.slug}`} className="text-cocoa-500 link-underline">View</Link>
           <button onClick={onEdit} className="text-cocoa-700 link-underline">Edit</button>
           <button disabled={pending} onClick={onDelete} className="text-rose-500 hover:text-cocoa-700">Delete</button>
@@ -238,7 +261,10 @@ function CollectionForm({
       </div>
       <Field name="image" label="Image URL (auto if blank)" defaultValue={initial?.image} placeholder="https://..." />
       <label className="mt-2 flex items-center gap-3 text-sm text-cocoa-700">
-        <input type="checkbox" name="featured" defaultChecked={initial?.featured} /> Featured
+        <input type="checkbox" name="featured" defaultChecked={initial?.featured} /> Featured (shows in the home &quot;Browse by mood&quot; grid)
+      </label>
+      <label className="flex items-center gap-3 text-sm text-cocoa-700">
+        <input type="checkbox" name="pinToHome" defaultChecked={initial?.pinToHome} /> Pin to home (adds a product carousel above Best Sellers)
       </label>
       <div className="mt-3 flex justify-end gap-2">
         <button type="button" onClick={onCancel} className="rounded-full border hairline px-4 py-2 text-xs uppercase tracking-widish text-cocoa-700">

@@ -62,6 +62,10 @@ export interface Collection {
    * sub-category (e.g. "diwali" under "the-occasion-edit"). Top-level
    * collections leave this undefined. */
   parentSlug?: string;
+  /* When true, this collection is featured as a product carousel on the
+   * home page (above Best Sellers). Great for time-limited edits like
+   * Rakhi, Diwali, Christmas — toggle off when the occasion is over. */
+  pinToHome?: boolean;
 }
 
 export interface Customer {

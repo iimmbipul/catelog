@@ -68,7 +68,7 @@ const DEFAULT_SETTINGS: Settings = {
   contact: {
     email: "hello@whiteandwick.co",
     phone: "+91 99999 99999",
-    address: "Studio, Mumbai, India",
+    address: "Studio, Bengaluru, India",
   },
   homepage: {
     heroHeading: "Light something\nbeautiful.",

@@ -1,8 +1,8 @@
 import { Flame, Leaf, Sparkle, Gift, Package } from "@/components/ui/Icons";
 
 const items = [
-  { icon: Flame, title: "Hand-poured", body: "Small batches from our Mumbai studio, wick by wick." },
-  { icon: Leaf, title: "Premium wax", body: "Soy and coconut blend for a clean, quiet burn." },
+  { icon: Flame, title: "Hand-poured", body: "Small batches from our Bengaluru studio, wick by wick." },
+  { icon: Leaf, title: "Premium wax", body: "Pure soy wax for clean burn." },
   { icon: Sparkle, title: "Beautiful fragrance", body: "Perfumer-crafted notes made to fill a room, softly." },
   { icon: Package, title: "Thoughtful packaging", body: "Recycled papers, cotton ribbons, tissue-wrapped." },
   { icon: Gift, title: "Made for gifting", body: "Free gift-wrap, hand-written cards, custom hampers." },
