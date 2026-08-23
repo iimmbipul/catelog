@@ -19,22 +19,30 @@ export default async function AdminLogin({ searchParams }: Props) {
         <div className="rounded-3xl bg-ivory-50 p-8 text-cocoa-700 shadow-card">
           <p className="eyebrow">Admin</p>
           <h1 className="mt-3 font-serif text-3xl">Sign in.</h1>
-          <p className="mt-2 text-sm text-cocoa-500">
-            Use <span className="font-mono">admin</span> / <span className="font-mono">whiteandwick</span> for the demo.
-          </p>
           {error && (
             <p className="mt-4 rounded-xl bg-rose-100 px-4 py-3 text-sm text-rose-500">
               Wrong username or password.
             </p>
           )}
-          <form action={loginAction} className="mt-8 space-y-4">
+          <form action={loginAction} className="mt-8 space-y-4" autoComplete="off">
             <div>
               <label className="eyebrow">Username</label>
-              <input name="username" defaultValue="admin" className="mt-2 w-full rounded-xl border hairline bg-transparent px-4 py-3 text-sm focus:outline-none focus:border-cocoa-500" />
+              <input
+                name="username"
+                autoComplete="off"
+                required
+                className="mt-2 w-full rounded-xl border hairline bg-transparent px-4 py-3 text-sm focus:outline-none focus:border-cocoa-500"
+              />
             </div>
             <div>
               <label className="eyebrow">Password</label>
-              <input name="password" type="password" defaultValue="whiteandwick" className="mt-2 w-full rounded-xl border hairline bg-transparent px-4 py-3 text-sm focus:outline-none focus:border-cocoa-500" />
+              <input
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                required
+                className="mt-2 w-full rounded-xl border hairline bg-transparent px-4 py-3 text-sm focus:outline-none focus:border-cocoa-500"
+              />
             </div>
             <button className="mt-2 w-full rounded-full bg-cocoa-700 py-3.5 text-sm uppercase tracking-widish text-ivory-50 hover:bg-cocoa-500">
               Sign in
