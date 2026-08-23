@@ -1,9 +1,6 @@
-/* Firestore-backed data layer for White & Wick.
- *
- * Every read/write in the app funnels through this file. If a Firestore
- * collection is empty on first read, it's seeded from the JSON files in
- * /data (or from the fallback seed module). This gives you a one-shot
- * migration from the previous file-based store on first load. */
+/* Firestore-only data layer. No seeding, no filesystem fallback, no
+ * bundled starter data. Every read goes straight to Firestore; every
+ * write does the same. If a collection is empty, callers see empty. */
 
 import {
   collection as fsCollection,
@@ -14,10 +11,8 @@ import {
   setDoc,
   writeBatch,
 } from "firebase/firestore";
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import { unstable_noStore as noStore } from "next/cache";
 import { COL, SETTINGS_DOC, getFirestoreDb } from "./firebase";
-import { seed } from "./seed";
 import type {
   Banner,
   Collection,
@@ -31,62 +26,131 @@ import type {
   Settings,
 } from "./types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-
 /* -------- helpers -------- */
 
-async function readJsonFallback<T>(fileName: string, defaults: T): Promise<T> {
-  try {
-    const raw = await fs.readFile(path.join(DATA_DIR, fileName), "utf-8");
-    return JSON.parse(raw) as T;
-  } catch {
-    return defaults;
+/* Firestore rejects any field whose value is exactly `undefined`. Strip
+ * them recursively (arrays keep their items, objects lose the undefined keys). */
+function stripUndefined<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((v) => stripUndefined(v)) as unknown as T;
   }
-}
-
-/* Get all docs of a collection. If Firestore has none, seed the collection
- * from the local JSON file (or the bundled seed) and return the seeded list. */
-async function listOrSeed<T extends { id: string }>(
-  colName: string,
-  fileName: string,
-  fallback: T[],
-): Promise<T[]> {
-  const db = getFirestoreDb();
-  const snap = await getDocs(fsCollection(db, colName));
-  if (!snap.empty) {
-    return snap.docs.map((d) => d.data() as T);
+  if (value !== null && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      if (v === undefined) continue;
+      out[k] = stripUndefined(v);
+    }
+    return out as T;
   }
-  const seedData = await readJsonFallback<T[]>(fileName, fallback);
-  if (seedData.length === 0) return [];
-  const batch = writeBatch(db);
-  for (const item of seedData) batch.set(doc(db, colName, item.id), item);
-  await batch.commit();
-  return seedData;
+  return value;
 }
 
-async function getOrSeedSingleton<T>(
-  colName: string,
-  docId: string,
-  fileName: string,
-  fallback: T,
-): Promise<T> {
-  const db = getFirestoreDb();
-  const ref = doc(db, colName, docId);
-  const snap = await getDoc(ref);
-  if (snap.exists()) return snap.data() as T;
-  const seedData = await readJsonFallback<T>(fileName, fallback);
-  await setDoc(ref, seedData as object);
-  return seedData;
+async function listAll<T extends { id: string }>(colName: string): Promise<T[]> {
+  // Opt every calling page out of the Next.js Data Cache — Firestore is the
+  // source of truth and must be re-read on each request.
+  noStore();
+  const snap = await getDocs(fsCollection(getFirestoreDb(), colName));
+  return snap.docs.map((d) => d.data() as T);
 }
 
-/* Replace an entire collection with the given items (diff-and-apply). */
+/* Fallback Settings — only used to render the site chrome (announcement bar,
+ * hero heading, contact block) when the settings/main doc has not yet been
+ * created in Firestore. Admins can override every field in /admin/settings. */
+const DEFAULT_SETTINGS: Settings = {
+  freeShippingAbove: 999,
+  currency: "INR",
+  announcementBar:
+    "Hand-poured with love • Free shipping above ₹999 • Complimentary gift-wrap on hampers",
+  socials: {
+    instagram: "https://instagram.com/whiteandwick",
+    whatsapp: "https://wa.me/919999999999",
+  },
+  contact: {
+    email: "hello@whiteandwick.co",
+    phone: "+91 99999 99999",
+    address: "Studio, Mumbai, India",
+  },
+  homepage: {
+    heroHeading: "Light something\nbeautiful.",
+    heroSubheading:
+      "Hand-poured scented candles for slow mornings, warm evenings, and everything in between.",
+    heroImage: "https://picsum.photos/seed/ww-hero-candle/1600/1900",
+    heroCtaLabel: "Shop Candles",
+    heroCtaHref: "/shop",
+    secondaryCtaLabel: "Explore Gifting",
+    secondaryCtaHref: "/gifting",
+  },
+};
+
+/* -------- Public read API -------- */
+
+export async function initData() {
+  // Kept as a no-op for backwards-compat with any callers.
+}
+
+export async function getProducts() {
+  return listAll<Product>(COL.products);
+}
+export async function getProductBySlug(slug: string) {
+  return (await getProducts()).find((p) => p.slug === slug) ?? null;
+}
+export async function getProductById(id: string) {
+  noStore();
+  const snap = await getDoc(doc(getFirestoreDb(), COL.products, id));
+  return snap.exists() ? (snap.data() as Product) : null;
+}
+export async function getCollections() {
+  return listAll<Collection>(COL.collections);
+}
+export async function getCollectionBySlug(slug: string) {
+  return (await getCollections()).find((c) => c.slug === slug) ?? null;
+}
+export async function getSettings(): Promise<Settings> {
+  noStore();
+  const snap = await getDoc(doc(getFirestoreDb(), COL.settings, SETTINGS_DOC));
+  return snap.exists() ? (snap.data() as Settings) : DEFAULT_SETTINGS;
+}
+export async function getOrders() {
+  return listAll<Order>(COL.orders);
+}
+export async function getOrderByNumber(num: string) {
+  return (await getOrders()).find((o) => o.orderNumber === num) ?? null;
+}
+export async function getCustomers() {
+  return listAll<Customer>(COL.customers);
+}
+export async function getCoupons() {
+  return listAll<Coupon>(COL.coupons);
+}
+export async function getCouponByCode(code: string) {
+  return (await getCoupons()).find((c) => c.code.toLowerCase() === code.toLowerCase()) ?? null;
+}
+export async function getBanners() {
+  return listAll<Banner>(COL.banners);
+}
+export async function getReviews(productId?: string) {
+  const all = await listAll<Review>(COL.reviews);
+  return productId ? all.filter((r) => r.productId === productId) : all;
+}
+export async function getFaqs() {
+  return listAll<FAQ>(COL.faqs);
+}
+export async function getGiftEnquiries() {
+  return listAll<GiftEnquiry>(COL.giftEnquiries);
+}
+
+/* -------- Public write API -------- */
+
+/* Replace an entire collection with the given items (diff-and-apply).
+ * NOTE: deletes any Firestore doc whose id is not in `items`. Callers must
+ * pass the full, current list to avoid data loss. */
 async function replaceCollection<T extends { id: string }>(colName: string, items: T[]) {
   const db = getFirestoreDb();
   const current = await getDocs(fsCollection(db, colName));
   const currentIds = new Set(current.docs.map((d) => d.id));
   const batch = writeBatch(db);
   for (const item of items) {
-    batch.set(doc(db, colName, item.id), item);
+    batch.set(doc(db, colName, item.id), stripUndefined(item) as object);
     currentIds.delete(item.id);
   }
   for (const id of currentIds) {
@@ -94,76 +158,6 @@ async function replaceCollection<T extends { id: string }>(colName: string, item
   }
   await batch.commit();
 }
-
-/* -------- Public read API (unchanged signatures) -------- */
-
-export async function initData() {
-  // Kept for backwards compatibility with any caller. Reads warm the cache
-  // and trigger the first-time seed automatically.
-  await Promise.all([
-    getProducts(),
-    getCollections(),
-    getCustomers(),
-    getOrders(),
-    getCoupons(),
-    getBanners(),
-    getReviews(),
-    getFaqs(),
-    getGiftEnquiries(),
-    getSettings(),
-  ]);
-}
-
-export async function getProducts() {
-  return listOrSeed<Product>(COL.products, "products.json", seed.products);
-}
-export async function getProductBySlug(slug: string) {
-  return (await getProducts()).find((p) => p.slug === slug) ?? null;
-}
-export async function getProductById(id: string) {
-  const db = getFirestoreDb();
-  const snap = await getDoc(doc(db, COL.products, id));
-  return snap.exists() ? (snap.data() as Product) : null;
-}
-export async function getCollections() {
-  return listOrSeed<Collection>(COL.collections, "collections.json", seed.collections);
-}
-export async function getCollectionBySlug(slug: string) {
-  return (await getCollections()).find((c) => c.slug === slug) ?? null;
-}
-export async function getSettings() {
-  return getOrSeedSingleton<Settings>(COL.settings, SETTINGS_DOC, "settings.json", seed.settings);
-}
-export async function getOrders() {
-  return listOrSeed<Order>(COL.orders, "orders.json", seed.orders);
-}
-export async function getOrderByNumber(num: string) {
-  return (await getOrders()).find((o) => o.orderNumber === num) ?? null;
-}
-export async function getCustomers() {
-  return listOrSeed<Customer>(COL.customers, "customers.json", seed.customers);
-}
-export async function getCoupons() {
-  return listOrSeed<Coupon>(COL.coupons, "coupons.json", seed.coupons);
-}
-export async function getCouponByCode(code: string) {
-  return (await getCoupons()).find((c) => c.code.toLowerCase() === code.toLowerCase()) ?? null;
-}
-export async function getBanners() {
-  return listOrSeed<Banner>(COL.banners, "banners.json", seed.banners);
-}
-export async function getReviews(productId?: string) {
-  const all = await listOrSeed<Review>(COL.reviews, "reviews.json", seed.reviews);
-  return productId ? all.filter((r) => r.productId === productId) : all;
-}
-export async function getFaqs() {
-  return listOrSeed<FAQ>(COL.faqs, "faqs.json", seed.faqs);
-}
-export async function getGiftEnquiries() {
-  return listOrSeed<GiftEnquiry>(COL.giftEnquiries, "giftEnquiries.json", seed.giftEnquiries);
-}
-
-/* -------- Public write API (unchanged signatures) -------- */
 
 export async function saveProducts(products: Product[]) {
   await replaceCollection(COL.products, products);
@@ -184,7 +178,10 @@ export async function saveFaqs(faqs: FAQ[]) {
   await replaceCollection(COL.faqs, faqs);
 }
 export async function saveSettings(settings: Settings) {
-  await setDoc(doc(getFirestoreDb(), COL.settings, SETTINGS_DOC), settings);
+  await setDoc(
+    doc(getFirestoreDb(), COL.settings, SETTINGS_DOC),
+    stripUndefined(settings) as object,
+  );
 }
 export async function saveGiftEnquiries(list: GiftEnquiry[]) {
   await replaceCollection(COL.giftEnquiries, list);
@@ -196,10 +193,13 @@ export async function saveCollections(list: Collection[]) {
   await replaceCollection(COL.collections, list);
 }
 
-/* -------- Convenience helpers -------- */
+/* -------- Single-doc helpers -------- */
 
 export async function upsertProduct(product: Product) {
-  await setDoc(doc(getFirestoreDb(), COL.products, product.id), product);
+  await setDoc(
+    doc(getFirestoreDb(), COL.products, product.id),
+    stripUndefined(product) as object,
+  );
 }
 
 export async function deleteProduct(id: string) {

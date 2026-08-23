@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Instagram } from "@/components/ui/Icons";
-import { IMG } from "@/lib/seed";
+import { IMG } from "@/lib/images";
 
 const shots = [IMG.social1, IMG.social2, IMG.social3, IMG.social4, IMG.social5, IMG.social6];
 

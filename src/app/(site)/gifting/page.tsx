@@ -6,7 +6,7 @@ import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { Arrow, Gift, Package, Sparkle } from "@/components/ui/Icons";
 import { getCollectionBySlug, getProducts } from "@/lib/db";
-import { IMG } from "@/lib/seed";
+import { IMG } from "@/lib/images";
 
 export const metadata = { title: "Gifting" };
 
