@@ -32,7 +32,7 @@ export default async function AboutPage() {
       <section className="container-page mt-12">
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-100 lg:col-span-2">
-            <Image src={image} alt="Studio" fill className="object-cover" sizes="(min-width: 1024px) 66vw, 100vw" />
+            <Image src={image} alt="Studio" fill className="object-contain" sizes="(min-width: 1024px) 66vw, 100vw" />
           </div>
           <div className="rounded-2xl border hairline bg-ivory-50 p-8">
             <p className="eyebrow">{about?.craftEyebrow || "Our craft"}</p>

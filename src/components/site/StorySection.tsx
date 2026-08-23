@@ -20,7 +20,7 @@ export function StorySection({ fallbackImage, story }: Props) {
           </h2>
         </div>
         <div className="relative overflow-hidden rounded-2xl bg-ivory-100 aspect-[4/5] lg:aspect-auto lg:min-h-[420px]">
-          <Image src={image} alt="Studio" fill className="object-cover" sizes="(min-width: 1024px) 35vw, 100vw" />
+          <Image src={image} alt="Studio" fill className="object-contain" sizes="(min-width: 1024px) 35vw, 100vw" />
         </div>
         <div className="lg:col-span-1 flex flex-col justify-between rounded-2xl border hairline bg-ivory-50 p-8">
           {story?.body1 && (

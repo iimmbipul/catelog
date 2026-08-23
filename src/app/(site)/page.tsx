@@ -49,12 +49,6 @@ export default async function HomePage() {
         <ProductCarousel products={bestSellers} />
       </section>
 
-      <FeatureRow />
-
-      <SprigDivider />
-
-      <StorySection fallbackImage={IMG.handpour} story={settings.homepage.story} />
-
       <section className="container-page mt-28">
         <SectionHeader
           eyebrow="New Arrivals"
@@ -64,6 +58,12 @@ export default async function HomePage() {
         />
         <ProductCarousel products={newArrivals} />
       </section>
+
+      <FeatureRow />
+
+      <SprigDivider />
+
+      <StorySection fallbackImage={IMG.handpour} story={settings.homepage.story} />
 
       <GiftingBanner fallbackImage={IMG.gifting} banner={settings.homepage.giftingBanner} />
 

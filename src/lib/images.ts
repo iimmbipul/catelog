@@ -8,7 +8,7 @@ const pic = (seed: string, w = 1200, h = 1500) =>
 
 export const IMG = {
   hero: pic("hero-candle", 1600, 1900),
-  gifting: pic("gifting-scene", 1600, 900),
+  gifting: "https://res.cloudinary.com/yeioefmb/image/upload/v1787486106/Gift_banner.png",
   studio: pic("studio", 1600, 2000),
   handpour: pic("handpour", 1600, 1200),
   florals: pic("florals", 1600, 1200),
