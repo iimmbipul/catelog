@@ -21,10 +21,16 @@ export default async function CollectionPage({ params }: Props) {
   if (!collection) return notFound();
   const [all, allCollections] = await Promise.all([getProducts(), getCollections()]);
   const children = allCollections.filter((c) => c.parentSlug === collection.slug);
-  // Products tagged in a category automatically bubble up to the parent
-  // collection view so admins don't have to double-tag.
+  // "best-sellers" and "new-arrivals" are admin-curated via the checkboxes on
+  // the product form (product.bestSeller / product.newArrival). Every other
+  // collection uses collection tags, with categories bubbling up to their parent.
   const scopedSlugs = new Set<string>([collection.slug, ...children.map((c) => c.slug)]);
-  const products = all.filter((p) => p.collections.some((s) => scopedSlugs.has(s)));
+  const products =
+    collection.slug === "best-sellers"
+      ? all.filter((p) => p.bestSeller)
+      : collection.slug === "new-arrivals"
+      ? all.filter((p) => p.newArrival)
+      : all.filter((p) => p.collections.some((s) => scopedSlugs.has(s)));
 
   return (
     <>

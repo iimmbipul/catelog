@@ -11,12 +11,11 @@ export default async function AdminCollectionsPage() {
   const withCounts = collections.map((c) => {
     const kids = collections.filter((x) => x.parentSlug === c.slug).map((x) => x.slug);
     const set = new Set([c.slug, ...kids]);
-    return {
-      ...c,
-      productIds: products
-        .filter((p) => p.collections.some((s) => set.has(s)) && p.status !== "archived" && p.status !== "draft")
-        .map((p) => p.id),
-    };
+    const activeProducts = products.filter((p) => p.status !== "archived" && p.status !== "draft");
+    let matching = activeProducts.filter((p) => p.collections.some((s) => set.has(s)));
+    if (c.slug === "best-sellers") matching = activeProducts.filter((p) => p.bestSeller);
+    if (c.slug === "new-arrivals") matching = activeProducts.filter((p) => p.newArrival);
+    return { ...c, productIds: matching.map((p) => p.id) };
   });
   return (
     <>

@@ -50,7 +50,7 @@ export default async function AnalyticsPage() {
       </div>
 
       <div className="mt-6">
-        <SalesChart />
+        <SalesChart orders={orders} />
       </div>
 
       <div className="mt-6 grid gap-5 xl:grid-cols-[1.4fr_1fr]">

@@ -170,7 +170,11 @@ export function ProductForm({
           </p>
 
           {(() => {
-            const parents = collections.filter((c) => !c.parentSlug);
+            // Best Sellers and New Arrivals are driven by the checkboxes in the
+            // Status card, not by collection tags — hide them from this panel.
+            const parents = collections.filter(
+              (c) => !c.parentSlug && c.slug !== "best-sellers" && c.slug !== "new-arrivals",
+            );
             const childrenOf = (slug: string) => collections.filter((c) => c.parentSlug === slug);
             const onToggle = (slug: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
               const box = e.currentTarget.form?.elements.namedItem("collections") as HTMLInputElement | null;
