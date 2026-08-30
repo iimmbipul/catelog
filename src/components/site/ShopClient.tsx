@@ -209,7 +209,7 @@ export function ShopClient({
             <p className="mt-2 text-sm text-cocoa-500">Try widening the collection or price range.</p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
             {filtered.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

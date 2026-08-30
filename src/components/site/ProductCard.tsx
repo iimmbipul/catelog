@@ -4,11 +4,12 @@ import Link from "next/link";
 import { Heart, Bag } from "@/components/ui/Icons";
 import { money, pct, computeDiscount } from "@/lib/format";
 import type { Product } from "@/lib/types";
-import { useCart, useWishlist } from "@/lib/store";
+import { useCart, useUI, useWishlist } from "@/lib/store";
 import { cn } from "@/lib/cn";
 
 export function ProductCard({ product, compact }: { product: Product; compact?: boolean }) {
   const add = useCart((s) => s.add);
+  const showToast = useUI((s) => s.showToast);
   const toggle = useWishlist((s) => s.toggle);
   const wished = useWishlist((s) => s.ids.includes(product.id));
   const discount = product.discountPercent ?? computeDiscount(product.mrp, product.price);
@@ -67,7 +68,7 @@ export function ProductCard({ product, compact }: { product: Product; compact?: 
 
         {!outOfStock && !compact && (
           <button
-            onClick={() =>
+            onClick={() => {
               add({
                 productId: product.id,
                 slug: product.slug,
@@ -76,8 +77,13 @@ export function ProductCard({ product, compact }: { product: Product; compact?: 
                 price: product.price,
                 mrp: product.mrp,
                 qty: 1,
-              })
-            }
+              });
+              showToast({
+                title: product.name,
+                subtitle: `${money(product.price)} · added to cart`,
+                image: product.images[0]?.url,
+              });
+            }}
             className="absolute inset-x-3 bottom-3 flex translate-y-2 items-center justify-center gap-2 rounded-full bg-cocoa-700 py-3 text-[11px] uppercase tracking-widish text-ivory-50 opacity-0 shadow-soft transition-all duration-500 ease-expo group-hover:translate-y-0 group-hover:opacity-100"
           >
             <Bag className="h-4 w-4" />

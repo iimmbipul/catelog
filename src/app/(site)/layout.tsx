@@ -2,6 +2,7 @@ import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { LeafBranch } from "@/components/site/Illustrations";
+import { Toaster } from "@/components/site/Toaster";
 import { getSettings } from "@/lib/db";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -37,6 +38,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         {children}
       </main>
       <Footer />
+      <Toaster />
     </>
   );
 }
