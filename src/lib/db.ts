@@ -202,6 +202,22 @@ export async function saveProducts(products: Product[]) {
 export async function saveOrders(orders: Order[]) {
   await replaceCollection(COL.orders, orders);
 }
+export async function markOrderPaid(orderNumber: string, paymentId: string) {
+  const orders = await getOrders();
+  const idx = orders.findIndex((o) => o.orderNumber === orderNumber);
+  if (idx === -1) return null;
+  const updated: Order = {
+    ...orders[idx],
+    paymentStatus: "paid",
+    orderStatus: orders[idx].orderStatus === "new" ? "confirmed" : orders[idx].orderStatus,
+    notes: [orders[idx].notes, `Razorpay payment: ${paymentId}`].filter(Boolean).join(" · "),
+  };
+  await setDoc(
+    doc(getFirestoreDb(), COL.orders, updated.id),
+    stripUndefined(updated) as object,
+  );
+  return updated;
+}
 export async function saveCoupons(coupons: Coupon[]) {
   await replaceCollection(COL.coupons, coupons);
 }

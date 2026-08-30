@@ -12,11 +12,66 @@ const INDIAN_STATES = [
   "Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal",
 ];
 
+const RAZORPAY_SCRIPT_SRC = "https://checkout.razorpay.com/v1/checkout.js";
+
+interface RazorpaySuccess {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description?: string;
+  order_id: string;
+  prefill?: { name?: string; email?: string; contact?: string };
+  notes?: Record<string, string>;
+  theme?: { color?: string };
+  handler: (response: RazorpaySuccess) => void;
+  modal?: { ondismiss?: () => void };
+}
+
+interface RazorpayInstance {
+  open: () => void;
+  on: (event: string, cb: (payload: unknown) => void) => void;
+}
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => RazorpayInstance;
+  }
+}
+
+function loadRazorpayScript(): Promise<boolean> {
+  if (typeof window === "undefined") return Promise.resolve(false);
+  if (window.Razorpay) return Promise.resolve(true);
+  return new Promise((resolve) => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[src="${RAZORPAY_SCRIPT_SRC}"]`,
+    );
+    if (existing) {
+      existing.addEventListener("load", () => resolve(true));
+      existing.addEventListener("error", () => resolve(false));
+      return;
+    }
+    const s = document.createElement("script");
+    s.src = RAZORPAY_SCRIPT_SRC;
+    s.async = true;
+    s.onload = () => resolve(true);
+    s.onerror = () => resolve(false);
+    document.body.appendChild(s);
+  });
+}
+
 export function CheckoutClient({ coupons }: { coupons: Coupon[] }) {
   const router = useRouter();
   const { items, giftMessage, notes, couponCode, clear } = useCart();
   const [submitting, setSubmitting] = useState(false);
   const [payment, setPayment] = useState<"razorpay" | "cod">("razorpay");
+  const [error, setError] = useState<string | null>(null);
 
   const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
   const active = coupons.find((c) => c.code === couponCode && c.active);
@@ -28,9 +83,99 @@ export function CheckoutClient({ coupons }: { coupons: Coupon[] }) {
   const shipping = subtotal >= 999 || subtotal === 0 ? 0 : 60;
   const total = Math.max(0, subtotal - discount + shipping);
 
+  async function payWithRazorpay(args: {
+    orderNumber: string;
+    amountPaise: number;
+    name: string;
+    email: string;
+    phone: string;
+  }) {
+    const publicKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    if (!publicKey) {
+      throw new Error("Razorpay public key is not configured.");
+    }
+    const ok = await loadRazorpayScript();
+    if (!ok || !window.Razorpay) {
+      throw new Error("Could not load Razorpay checkout. Check your network and retry.");
+    }
+
+    const orderRes = await fetch("/api/razorpay/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: args.amountPaise,
+        currency: "INR",
+        receipt: args.orderNumber,
+      }),
+    });
+    if (!orderRes.ok) {
+      const data = await orderRes.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to start payment.");
+    }
+    const orderData = (await orderRes.json()) as {
+      order_id: string;
+      amount: number;
+      currency: string;
+    };
+
+    return new Promise<void>((resolve, reject) => {
+      const Razorpay = window.Razorpay;
+      if (!Razorpay) {
+        reject(new Error("Razorpay is unavailable."));
+        return;
+      }
+      const rzp = new Razorpay({
+        key: publicKey,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "White & Wick",
+        description: `Order ${args.orderNumber}`,
+        order_id: orderData.order_id,
+        prefill: { name: args.name, email: args.email, contact: args.phone },
+        notes: { orderNumber: args.orderNumber },
+        theme: { color: "#4a352a" },
+        handler: async (response) => {
+          try {
+            const verifyRes = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...response,
+                orderNumber: args.orderNumber,
+              }),
+            });
+            if (!verifyRes.ok) {
+              const data = await verifyRes.json().catch(() => ({}));
+              reject(new Error(data.error || "Payment could not be verified."));
+              return;
+            }
+            resolve();
+          } catch (err) {
+            reject(err instanceof Error ? err : new Error("Payment verification failed."));
+          }
+        },
+        modal: {
+          ondismiss: () => reject(new Error("Payment cancelled.")),
+        },
+      });
+      rzp.on("payment.failed", (payload: unknown) => {
+        const message =
+          typeof payload === "object" &&
+          payload &&
+          "error" in payload &&
+          typeof (payload as { error?: { description?: string } }).error?.description === "string"
+            ? (payload as { error: { description: string } }).error.description
+            : "Payment failed. Please try again.";
+        reject(new Error(message));
+      });
+      rzp.open();
+    });
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (items.length === 0) return;
+    setError(null);
     setSubmitting(true);
     const fd = new FormData(e.currentTarget);
     const address = {
@@ -43,15 +188,29 @@ export function CheckoutClient({ coupons }: { coupons: Coupon[] }) {
       state: String(fd.get("state")),
       pincode: String(fd.get("pincode")),
     };
-    const res = await placeOrder({
-      items,
-      coupon: couponCode,
-      giftMessage,
-      notes,
-      address,
-    });
-    clear();
-    router.push(`/order/${res.orderNumber}`);
+    try {
+      const res = await placeOrder({
+        items,
+        coupon: couponCode,
+        giftMessage,
+        notes,
+        address,
+      });
+      if (payment === "razorpay") {
+        await payWithRazorpay({
+          orderNumber: res.orderNumber,
+          amountPaise: Math.max(100, Math.round(total * 100)),
+          name: address.name,
+          email: address.email,
+          phone: address.phone,
+        });
+      }
+      clear();
+      router.push(`/order/${res.orderNumber}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -82,7 +241,7 @@ export function CheckoutClient({ coupons }: { coupons: Coupon[] }) {
 
         <Fieldset title="Payment">
           <div className="space-y-3">
-            <Radio label="Razorpay — UPI, cards, netbanking" hint="You&apos;ll be redirected to complete payment. (API key required — see Settings.)" checked={payment === "razorpay"} onChange={() => setPayment("razorpay")} />
+            <Radio label="Razorpay — UPI, cards, netbanking" hint="You&apos;ll complete payment in a secure modal before your order is confirmed." checked={payment === "razorpay"} onChange={() => setPayment("razorpay")} />
             <Radio label="Cash on delivery" hint="Available on select pincodes." checked={payment === "cod"} onChange={() => setPayment("cod")} />
           </div>
         </Fieldset>
@@ -122,11 +281,17 @@ export function CheckoutClient({ coupons }: { coupons: Coupon[] }) {
           </div>
         </div>
 
+        {error && (
+          <p className="rounded-2xl bg-rose-50 px-4 py-3 text-xs text-rose-600" role="alert">
+            {error}
+          </p>
+        )}
+
         <button
           disabled={submitting || items.length === 0}
           className="block w-full rounded-full bg-cocoa-700 py-4 text-center text-sm uppercase tracking-widish text-ivory-50 hover:bg-cocoa-500 disabled:opacity-50"
         >
-          {submitting ? "Placing order…" : "Place order"}
+          {submitting ? (payment === "razorpay" ? "Opening payment…" : "Placing order…") : payment === "razorpay" ? `Pay ${money(total)}` : "Place order"}
         </button>
         <p className="text-center text-[11px] text-cocoa-400">
           By placing this order you agree to our <Link href="/terms" className="link-underline">Terms</Link> and <Link href="/privacy" className="link-underline">Privacy Policy</Link>.
