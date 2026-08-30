@@ -38,6 +38,7 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
   const activeImage = gallery[active] ?? gallery[0];
   const add = useCart((s) => s.add);
   const setCartOpen = useUI((s) => s.setCartOpen);
+  const showToast = useUI((s) => s.showToast);
   const toggle = useWishlist((s) => s.toggle);
   const wished = useWishlist((s) => s.ids.includes(product.id));
   const router = useRouter();
@@ -59,7 +60,11 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
 
   const addToCart = () => {
     add(cartItem);
-    setCartOpen(true);
+    showToast({
+      title: product.name,
+      subtitle: [selectedColor?.name, fragrance, `Qty ${qty}`].filter(Boolean).join(" · "),
+      image: cartItem.image,
+    });
   };
 
   const buyNow = () => {

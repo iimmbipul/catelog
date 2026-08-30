@@ -101,20 +101,45 @@ export const useWishlist = create<WishlistState>()(
   ),
 );
 
+export interface Toast {
+  id: number;
+  title: string;
+  subtitle?: string;
+  image?: string;
+  href?: string;
+}
+
 interface UIState {
   cartOpen: boolean;
   searchOpen: boolean;
   menuOpen: boolean;
+  toasts: Toast[];
   setCartOpen: (v: boolean) => void;
   setSearchOpen: (v: boolean) => void;
   setMenuOpen: (v: boolean) => void;
+  showToast: (t: Omit<Toast, "id">) => void;
+  dismissToast: (id: number) => void;
 }
 
 export const useUI = create<UIState>((set) => ({
   cartOpen: false,
   searchOpen: false,
   menuOpen: false,
+  toasts: [],
   setCartOpen: (v) => set({ cartOpen: v }),
   setSearchOpen: (v) => set({ searchOpen: v }),
   setMenuOpen: (v) => set({ menuOpen: v }),
+  showToast: (t) =>
+    set((s) => {
+      const id = Date.now() + Math.random();
+      const toast: Toast = { id, ...t };
+      // Auto-dismiss after 3.5s
+      if (typeof window !== "undefined") {
+        setTimeout(() => {
+          set((cur) => ({ toasts: cur.toasts.filter((x) => x.id !== id) }));
+        }, 3500);
+      }
+      return { toasts: [...s.toasts, toast] };
+    }),
+  dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 }));
