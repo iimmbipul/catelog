@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { cn } from "@/lib/cn";
 import { Logo } from "@/components/site/Logo";
 
@@ -66,12 +67,32 @@ export function AdminSidebar() {
           </div>
         ))}
       </nav>
-      <div className="border-t hairline p-4 text-xs text-cocoa-400">
-        Signed in as <span className="text-cocoa-700">admin</span>
-        <form action="/admin/logout" method="post" className="mt-2">
-          <button className="text-xs uppercase tracking-widish text-rose-500 hover:text-cocoa-700">Sign out</button>
-        </form>
-      </div>
+      <SidebarAccount />
     </aside>
+  );
+}
+
+function SidebarAccount() {
+  const { user, isLoaded } = useUser();
+  return (
+    <div className="flex items-center gap-3 border-t hairline p-4 text-xs text-cocoa-400">
+      <UserButton
+        appearance={{ elements: { avatarBox: { width: 32, height: 32 } } }}
+      />
+      <div className="min-w-0 flex-1 leading-tight">
+        {isLoaded && user ? (
+          <>
+            <p className="text-cocoa-700 truncate">
+              {user.fullName || user.primaryEmailAddress?.emailAddress || "Signed in"}
+            </p>
+            {user.primaryEmailAddress?.emailAddress && user.fullName && (
+              <p className="truncate">{user.primaryEmailAddress.emailAddress}</p>
+            )}
+          </>
+        ) : (
+          <p>Loading…</p>
+        )}
+      </div>
+    </div>
   );
 }

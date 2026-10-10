@@ -1,29 +1,27 @@
-import { cookies } from "next/headers";
+import { currentUser } from "@clerk/nextjs/server";
 
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "whiteandwick";
-const COOKIE = "ww_admin";
+/* White & Wick admin allowlist.
+ *
+ * Default: only whiteandwick@gmail.com. Override with the ADMIN_EMAILS env
+ * var (comma-separated) to grant more people access.
+ *
+ *   ADMIN_EMAILS="owner@example.com,ops@example.com"
+ */
+const DEFAULT_ADMIN_EMAILS = ["whiteandwick@gmail.com"];
 
-export async function isAdmin() {
-  const c = await cookies();
-  return c.get(COOKIE)?.value === "yes";
+function allowedEmails(): string[] {
+  const raw = (process.env.ADMIN_EMAILS ?? "").trim();
+  if (!raw) return DEFAULT_ADMIN_EMAILS.map((e) => e.toLowerCase());
+  return raw
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
 }
 
-export async function signIn(username: string, password: string) {
-  if (username === ADMIN_USER && password === ADMIN_PASS) {
-    const c = await cookies();
-    c.set(COOKIE, "yes", {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-    return { ok: true };
-  }
-  return { ok: false as const, error: "Wrong username or password." };
-}
-
-export async function signOut() {
-  const c = await cookies();
-  c.delete(COOKIE);
+export async function isAdmin(): Promise<boolean> {
+  const user = await currentUser();
+  if (!user) return false;
+  const allow = allowedEmails();
+  const emails = user.emailAddresses.map((e) => e.emailAddress.toLowerCase());
+  return emails.some((e) => allow.includes(e));
 }
