@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
+import { Show, SignInButton, SignOutButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { getOrders } from "@/lib/db";
@@ -24,7 +24,7 @@ export default async function AccountPage() {
     <div className="container-page pt-8 lg:pt-14">
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Account" }]} />
 
-      <SignedOut>
+      <Show when="signed-out">
         <div className="mx-auto mt-16 max-w-md rounded-3xl border hairline bg-ivory-50 p-10 text-center">
           <p className="eyebrow">My account</p>
           <h1 className="mt-3 font-serif text-3xl text-cocoa-700">Sign in to see your orders.</h1>
@@ -39,9 +39,9 @@ export default async function AccountPage() {
             </SignInButton>
           </div>
         </div>
-      </SignedOut>
+      </Show>
 
-      <SignedIn>
+      <Show when="signed-in">
         <div className="mt-8 grid gap-10 lg:grid-cols-[240px_1fr]">
           <aside className="rounded-2xl border hairline bg-ivory-50 p-5">
             <p className="eyebrow">Hello,</p>
@@ -110,7 +110,7 @@ export default async function AccountPage() {
             )}
           </div>
         </div>
-      </SignedIn>
+      </Show>
     </div>
   );
 }
