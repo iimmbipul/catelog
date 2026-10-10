@@ -70,6 +70,7 @@ export async function placeOrder(input: CheckoutInput) {
     address: {
       name: input.address.name,
       phone: input.address.phone,
+      email: input.address.email,
       line1: input.address.line1,
       area: input.address.area,
       city: input.address.city,

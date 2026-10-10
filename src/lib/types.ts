@@ -126,6 +126,7 @@ export interface Order {
   address: {
     name: string;
     phone: string;
+    email?: string;
     line1: string;
     area: string;
     city: string;
