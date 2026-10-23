@@ -20,14 +20,17 @@ export default async function AnalyticsPage() {
   const aov = paid.length ? Math.round(revenue / paid.length) : 0;
   const repeat = customers.filter((c) => c.ordersCount > 1).length;
 
+  // Breakdowns use paid orders only so they reconcile with the Revenue card.
+  const paidItems = paid.flatMap((o) => o.items);
+
   const perProduct = products.map((p) => {
-    const sold = orders.flatMap((o) => o.items).filter((i) => i.productId === p.id).reduce((s, i) => s + i.qty, 0);
-    const rev = orders.flatMap((o) => o.items).filter((i) => i.productId === p.id).reduce((s, i) => s + i.qty * i.price, 0);
+    const sold = paidItems.filter((i) => i.productId === p.id).reduce((s, i) => s + i.qty, 0);
+    const rev = paidItems.filter((i) => i.productId === p.id).reduce((s, i) => s + i.qty * i.price, 0);
     return { p, sold, rev };
   }).sort((a, b) => b.rev - a.rev).slice(0, 6);
 
   const perCollection = collections.map((c) => {
-    const rev = orders.flatMap((o) => o.items)
+    const rev = paidItems
       .filter((i) => products.find((p) => p.id === i.productId)?.collections.includes(c.slug))
       .reduce((s, i) => s + i.qty * i.price, 0);
     return { c, rev };
