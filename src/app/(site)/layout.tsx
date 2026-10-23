@@ -4,6 +4,8 @@ import { Footer } from "@/components/site/Footer";
 import { LeafBranch } from "@/components/site/Illustrations";
 import { Toaster } from "@/components/site/Toaster";
 import { getSettings } from "@/lib/db";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSettings();
@@ -39,6 +41,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       </main>
       <Footer />
       <Toaster />
+      {/* Storefront only — admin traffic stays out of the visitor numbers. */}
+      <Analytics />
+      <SpeedInsights />
     </>
   );
 }

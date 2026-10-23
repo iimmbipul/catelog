@@ -30,6 +30,7 @@ export default async function AdminDashboard() {
   const bestSelling = [...products]
     .map((p) => {
       const sold = orders
+        .filter((o) => o.paymentStatus === "paid")
         .flatMap((o) => o.items)
         .filter((i) => i.productId === p.id)
         .reduce((s, i) => s + i.qty, 0);
