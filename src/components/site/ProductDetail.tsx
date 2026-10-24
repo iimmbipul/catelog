@@ -191,9 +191,9 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
           <button
             disabled={outOfStock}
             onClick={addToCart}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-cocoa-700 py-3.5 text-sm uppercase tracking-widish text-ivory-50 hover:bg-cocoa-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-cocoa-700 px-4 py-3.5 text-xs uppercase tracking-widish text-ivory-50 hover:bg-cocoa-500 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
           >
-            <Bag className="h-4 w-4" /> Add to cart
+            <Bag className="hidden h-4 w-4 sm:inline-block" /> Add to cart
           </button>
           <button
             onClick={() => toggle(product.id)}
