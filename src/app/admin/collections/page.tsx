@@ -11,6 +11,7 @@ export default async function AdminCollectionsPage() {
   const withCounts = collections.map((c) => {
     const kids = collections.filter((x) => x.parentSlug === c.slug).map((x) => x.slug);
     const set = new Set([c.slug, ...kids]);
+    if (c.slug === "festive-gifts") for (const s of ["rakhi", "diwali", "christmas"]) set.add(s);
     const activeProducts = products.filter((p) => p.status !== "archived" && p.status !== "draft");
     let matching = activeProducts.filter((p) => p.collections.some((s) => set.has(s)));
     if (c.slug === "best-sellers") matching = activeProducts.filter((p) => p.bestSeller);

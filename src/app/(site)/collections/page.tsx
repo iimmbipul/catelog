@@ -13,11 +13,13 @@ export default async function CollectionsIndex() {
   const collections = allCollections.filter((c) => !c.parentSlug);
   // Parent counts include products from any child category. Best sellers /
   // new arrivals are admin-curated via flags, not collection tags.
+  // festive-gifts also aggregates the Occasion Edit festive categories.
   const countFor = (slug: string) => {
     if (slug === "best-sellers") return products.filter((p) => p.bestSeller && p.status !== "archived" && p.status !== "draft").length;
     if (slug === "new-arrivals") return products.filter((p) => p.newArrival && p.status !== "archived" && p.status !== "draft").length;
     const kids = allCollections.filter((c) => c.parentSlug === slug).map((c) => c.slug);
     const set = new Set([slug, ...kids]);
+    if (slug === "festive-gifts") for (const s of ["rakhi", "diwali", "christmas"]) set.add(s);
     return products.filter(
       (p) => p.collections.some((s) => set.has(s)) && p.status !== "archived" && p.status !== "draft",
     ).length;

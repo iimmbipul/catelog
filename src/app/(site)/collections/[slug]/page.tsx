@@ -24,7 +24,13 @@ export default async function CollectionPage({ params }: Props) {
   // "best-sellers" and "new-arrivals" are admin-curated via the checkboxes on
   // the product form (product.bestSeller / product.newArrival). Every other
   // collection uses collection tags, with categories bubbling up to their parent.
+  // "festive-gifts" is a cross-cut: it aggregates products from the Occasion
+  // Edit festive categories (Rakhi, Diwali, Christmas) in addition to
+  // anything tagged festive-gifts directly.
   const scopedSlugs = new Set<string>([collection.slug, ...children.map((c) => c.slug)]);
+  if (collection.slug === "festive-gifts") {
+    for (const s of ["rakhi", "diwali", "christmas"]) scopedSlugs.add(s);
+  }
   const products =
     collection.slug === "best-sellers"
       ? all.filter((p) => p.bestSeller)

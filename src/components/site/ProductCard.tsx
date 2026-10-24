@@ -93,12 +93,15 @@ export function ProductCard({ product, compact }: { product: Product; compact?: 
       </div>
 
       <div className="mt-4 space-y-1.5">
-        <div className="flex items-start justify-between gap-3">
-          <Link href={`/product/${product.slug}`} className="font-serif text-lg text-cocoa-700 hover:text-cocoa-500">
+        <div className="flex items-start justify-between gap-2 sm:gap-3">
+          <Link
+            href={`/product/${product.slug}`}
+            className="min-w-0 flex-1 font-serif text-base text-cocoa-700 hover:text-cocoa-500 sm:text-lg"
+          >
             {product.name}
           </Link>
-          <div className="text-right">
-            <p className="font-serif text-lg text-cocoa-700">{money(product.price)}</p>
+          <div className="flex-none text-right">
+            <p className="font-serif text-base text-cocoa-700 sm:text-lg">{money(product.price)}</p>
             {product.mrp > product.price && (
               <p className="text-xs text-cocoa-400 line-through">{money(product.mrp)}</p>
             )}
