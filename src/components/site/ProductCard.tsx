@@ -16,9 +16,9 @@ export function ProductCard({ product, compact }: { product: Product; compact?: 
   const outOfStock = product.stock <= 0 || product.status === "out_of_stock";
 
   return (
-    <article className={cn("product-card group relative")}>
+    <article className={cn("product-card group relative min-w-0 max-w-full")}>
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-100">
-        <Link href={`/product/${product.slug}`} className="block h-full w-full">
+        <Link href={`/product/${product.slug}`} className="relative block h-full w-full">
           <Image
             src={product.images[0]?.url}
             alt={product.images[0]?.alt ?? product.name}
@@ -93,15 +93,15 @@ export function ProductCard({ product, compact }: { product: Product; compact?: 
       </div>
 
       <div className="mt-4 space-y-1.5">
-        <div className="flex items-start justify-between gap-2 sm:gap-3">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 sm:gap-3">
           <Link
             href={`/product/${product.slug}`}
-            className="min-w-0 flex-1 font-serif text-base text-cocoa-700 hover:text-cocoa-500 sm:text-lg"
+            className="block break-words font-serif text-sm leading-tight text-cocoa-700 hover:text-cocoa-500 sm:text-lg"
           >
             {product.name}
           </Link>
-          <div className="flex-none text-right">
-            <p className="font-serif text-base text-cocoa-700 sm:text-lg">{money(product.price)}</p>
+          <div className="text-right">
+            <p className="font-serif text-sm text-cocoa-700 sm:text-lg">{money(product.price)}</p>
             {product.mrp > product.price && (
               <p className="text-xs text-cocoa-400 line-through">{money(product.mrp)}</p>
             )}

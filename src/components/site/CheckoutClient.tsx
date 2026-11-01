@@ -7,6 +7,14 @@ import { placeOrder } from "@/app/(site)/checkout/actions";
 import { useCart } from "@/lib/store";
 import { money } from "@/lib/format";
 import type { Coupon } from "@/lib/types";
+import {
+  PHONE_COUNTRY_CODE,
+  normalizePhone,
+  validateEmail,
+  validatePhone,
+  validatePincode,
+  validateRequired,
+} from "@/lib/validation";
 
 const INDIAN_STATES = [
   "Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal",
@@ -72,6 +80,20 @@ export function CheckoutClient({ coupons }: { coupons: Coupon[] }) {
   const [submitting, setSubmitting] = useState(false);
   const [payment, setPayment] = useState<"razorpay" | "cod">("razorpay");
   const [error, setError] = useState<string | null>(null);
+  type FieldKey = "email" | "phone" | "name" | "line1" | "area" | "city" | "pincode";
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldKey, string>>>({});
+
+  function validateAll(a: Record<FieldKey, string>): Partial<Record<FieldKey, string>> {
+    const errs: Partial<Record<FieldKey, string>> = {};
+    const email = validateEmail(a.email); if (email) errs.email = email;
+    const phone = validatePhone(a.phone); if (phone) errs.phone = phone;
+    const name = validateRequired(a.name, "Full name"); if (name) errs.name = name;
+    const line1 = validateRequired(a.line1, "Address"); if (line1) errs.line1 = line1;
+    const area = validateRequired(a.area, "Area / Landmark"); if (area) errs.area = area;
+    const city = validateRequired(a.city, "City"); if (city) errs.city = city;
+    const pincode = validatePincode(a.pincode); if (pincode) errs.pincode = pincode;
+    return errs;
+  }
 
   const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
   const active = coupons.find((c) => c.code === couponCode && c.active);
@@ -176,17 +198,31 @@ export function CheckoutClient({ coupons }: { coupons: Coupon[] }) {
     e.preventDefault();
     if (items.length === 0) return;
     setError(null);
-    setSubmitting(true);
     const fd = new FormData(e.currentTarget);
+    const raw = {
+      name: String(fd.get("name") ?? ""),
+      email: String(fd.get("email") ?? ""),
+      phone: String(fd.get("phone") ?? ""),
+      line1: String(fd.get("line1") ?? ""),
+      area: String(fd.get("area") ?? ""),
+      city: String(fd.get("city") ?? ""),
+      pincode: String(fd.get("pincode") ?? ""),
+    };
+    const errs = validateAll(raw);
+    if (Object.keys(errs).length > 0) {
+      setFieldErrors(errs);
+      setError("Please fix the highlighted fields and try again.");
+      // Focus the first invalid field for accessibility.
+      const first = Object.keys(errs)[0] as FieldKey;
+      (document.querySelector<HTMLInputElement>(`[name="${first}"]`))?.focus();
+      return;
+    }
+    setFieldErrors({});
+    setSubmitting(true);
     const address = {
-      name: String(fd.get("name")),
-      email: String(fd.get("email")),
-      phone: String(fd.get("phone")),
-      line1: String(fd.get("line1")),
-      area: String(fd.get("area")),
-      city: String(fd.get("city")),
-      state: String(fd.get("state")),
-      pincode: String(fd.get("pincode")),
+      ...raw,
+      phone: normalizePhone(raw.phone),
+      state: String(fd.get("state") ?? ""),
     };
     try {
       const res = await placeOrder({
@@ -214,28 +250,97 @@ export function CheckoutClient({ coupons }: { coupons: Coupon[] }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+    <form onSubmit={handleSubmit} noValidate className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
       <div className="space-y-8">
         <Fieldset title="Contact">
-          <Field name="email" label="Email" type="email" required autoComplete="email" />
-          <Field name="phone" label="Mobile number" required autoComplete="tel" />
+          <Field
+            name="email"
+            label="Email"
+            type="email"
+            required
+            autoComplete="email"
+            error={fieldErrors.email}
+            onBlur={(e) => {
+              const err = validateEmail(e.currentTarget.value);
+              setFieldErrors((p) => ({ ...p, email: err ?? undefined }));
+            }}
+          />
+          <PhoneField
+            error={fieldErrors.phone}
+            onBlur={(e) => {
+              const err = validatePhone(e.currentTarget.value);
+              setFieldErrors((p) => ({ ...p, phone: err ?? undefined }));
+            }}
+          />
         </Fieldset>
 
         <Fieldset title="Shipping address">
-          <Field name="name" label="Full name" required autoComplete="name" />
-          <Field name="line1" label="Flat / House number, Building" required autoComplete="address-line1" />
-          <Field name="area" label="Area / Landmark" required />
-          <Field name="city" label="City" required autoComplete="address-level2" />
+          <Field
+            name="name"
+            label="Full name"
+            required
+            autoComplete="name"
+            error={fieldErrors.name}
+            onBlur={(e) => {
+              const err = validateRequired(e.currentTarget.value, "Full name");
+              setFieldErrors((p) => ({ ...p, name: err ?? undefined }));
+            }}
+          />
+          <Field
+            name="line1"
+            label="Flat / House number, Building"
+            required
+            autoComplete="address-line1"
+            error={fieldErrors.line1}
+            onBlur={(e) => {
+              const err = validateRequired(e.currentTarget.value, "Address");
+              setFieldErrors((p) => ({ ...p, line1: err ?? undefined }));
+            }}
+          />
+          <Field
+            name="area"
+            label="Area / Landmark"
+            required
+            error={fieldErrors.area}
+            onBlur={(e) => {
+              const err = validateRequired(e.currentTarget.value, "Area / Landmark");
+              setFieldErrors((p) => ({ ...p, area: err ?? undefined }));
+            }}
+          />
+          <Field
+            name="city"
+            label="City"
+            required
+            autoComplete="address-level2"
+            error={fieldErrors.city}
+            onBlur={(e) => {
+              const err = validateRequired(e.currentTarget.value, "City");
+              setFieldErrors((p) => ({ ...p, city: err ?? undefined }));
+            }}
+          />
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <label className="eyebrow">State</label>
-              <select name="state" required className="w-full rounded-xl border hairline bg-transparent px-4 py-3 text-sm focus:outline-none focus:border-cocoa-500">
+              <select name="state" required defaultValue="" className="w-full rounded-xl border hairline bg-transparent px-4 py-3 text-sm focus:outline-none focus:border-cocoa-500">
+                <option value="" disabled>Select state</option>
                 {INDIAN_STATES.map((s) => (
                   <option key={s} value={s}>{s}</option>
                 ))}
               </select>
             </div>
-            <Field name="pincode" label="Pincode" required inputMode="numeric" />
+            <Field
+              name="pincode"
+              label="Pincode"
+              required
+              inputMode="numeric"
+              maxLength={6}
+              pattern="\d{6}"
+              error={fieldErrors.pincode}
+              onBlur={(e) => {
+                const err = validatePincode(e.currentTarget.value);
+                setFieldErrors((p) => ({ ...p, pincode: err ?? undefined }));
+              }}
+            />
           </div>
         </Fieldset>
 
@@ -310,12 +415,62 @@ function Fieldset({ title, children }: { title: string; children: React.ReactNod
   );
 }
 
-function Field(props: React.InputHTMLAttributes<HTMLInputElement> & { label: string; name: string }) {
-  const { label, ...rest } = props;
+function Field(props: React.InputHTMLAttributes<HTMLInputElement> & { label: string; name: string; error?: string }) {
+  const { label, error, ...rest } = props;
   return (
     <div className="space-y-1.5">
-      <label className="eyebrow">{label}</label>
-      <input {...rest} className="w-full rounded-xl border hairline bg-transparent px-4 py-3 text-sm focus:outline-none focus:border-cocoa-500" />
+      <label className="eyebrow" htmlFor={props.name}>{label}</label>
+      <input
+        id={props.name}
+        {...rest}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${props.name}-error` : undefined}
+        className={`w-full rounded-xl border bg-transparent px-4 py-3 text-sm focus:outline-none ${
+          error ? "border-rose-500 focus:border-rose-500" : "hairline focus:border-cocoa-500"
+        }`}
+      />
+      {error && (
+        <p id={`${props.name}-error`} className="text-xs text-rose-500" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PhoneField({ error, onBlur }: { error?: string; onBlur: React.FocusEventHandler<HTMLInputElement> }) {
+  return (
+    <div className="space-y-1.5">
+      <label className="eyebrow" htmlFor="phone">Mobile number</label>
+      <div
+        className={`flex items-stretch overflow-hidden rounded-xl border ${
+          error ? "border-rose-500" : "hairline"
+        }`}
+      >
+        <span className="flex items-center bg-ivory-100 px-3 text-sm text-cocoa-700">
+          {PHONE_COUNTRY_CODE}
+        </span>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          inputMode="numeric"
+          required
+          autoComplete="tel-national"
+          maxLength={10}
+          pattern="[6-9]\d{9}"
+          placeholder="98765 43210"
+          onBlur={onBlur}
+          aria-invalid={!!error}
+          aria-describedby={error ? "phone-error" : undefined}
+          className="w-full bg-transparent px-4 py-3 text-sm focus:outline-none"
+        />
+      </div>
+      {error && (
+        <p id="phone-error" className="text-xs text-rose-500" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

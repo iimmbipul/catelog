@@ -25,12 +25,21 @@ export default async function CollectionPage({ params }: Props) {
   // the product form (product.bestSeller / product.newArrival). Every other
   // collection uses collection tags, with categories bubbling up to their parent.
   // "festive-gifts" is a cross-cut: it aggregates products from the Occasion
-  // Edit festive categories (Rakhi, Diwali, Christmas) in addition to
-  // anything tagged festive-gifts directly.
+  // Edit festive categories (Rakhi, Diwali, Christmas). This aggregation also
+  // bubbles up when festive-gifts is a child of the current collection (e.g.
+  // gift-sets), so the Festive tile and parent grid both include them.
+  const FESTIVE_SOURCES = ["rakhi", "diwali", "christmas"];
   const scopedSlugs = new Set<string>([collection.slug, ...children.map((c) => c.slug)]);
-  if (collection.slug === "festive-gifts") {
-    for (const s of ["rakhi", "diwali", "christmas"]) scopedSlugs.add(s);
+  if (scopedSlugs.has("festive-gifts")) {
+    for (const s of FESTIVE_SOURCES) scopedSlugs.add(s);
   }
+  const productsInSlug = (slug: string) => {
+    const slugs = new Set<string>([slug]);
+    if (slug === "festive-gifts") for (const s of FESTIVE_SOURCES) slugs.add(s);
+    return all.filter(
+      (p) => p.collections.some((x) => slugs.has(x)) && p.status !== "archived" && p.status !== "draft",
+    );
+  };
   const products =
     collection.slug === "best-sellers"
       ? all.filter((p) => p.bestSeller)
@@ -94,7 +103,7 @@ export default async function CollectionPage({ params }: Props) {
                     <p className="eyebrow text-ivory-50/70">{child.subtitle}</p>
                     <h3 className="mt-1 font-serif text-2xl">{child.title}</h3>
                     <p className="mt-1 text-xs text-ivory-50/70">
-                      {all.filter((p) => p.collections.includes(child.slug) && p.status !== "archived" && p.status !== "draft").length} candles
+                      {productsInSlug(child.slug).length} candles
                     </p>
                   </div>
                   <span className="grid h-10 w-10 place-items-center rounded-full border border-ivory-50/50 transition-transform group-hover:-rotate-45">

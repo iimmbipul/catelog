@@ -18,6 +18,15 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+html,
+body {
+  /* Decorative leaves in the site layout are absolutely positioned with
+   * negative insets. The <main> clips them, but mobile Safari still lets
+   * the document scroll horizontally when any descendant extends past the
+   * viewport. Lock it here so nothing can escape and clip card content. */
+  overflow-x: hidden;
+}
+
 body {
   background: var(--color-mist);
   color: var(--color-ink);
