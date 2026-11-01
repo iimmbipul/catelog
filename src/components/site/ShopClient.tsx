@@ -16,6 +16,23 @@ const SORTS: { value: Sort; label: string }[] = [
   { value: "best", label: "Best selling" },
 ];
 
+// Keep in sync with src/app/(site)/collections/[slug]/page.tsx —
+// festive-gifts aggregates products tagged under rakhi, diwali, christmas.
+const COLLECTION_AGGREGATION: Record<string, string[]> = {
+  "festive-gifts": ["festive-gifts", "rakhi", "diwali", "christmas"],
+};
+const expandSlug = (slug: string, collections: Collection[]): string[] => {
+  const base = COLLECTION_AGGREGATION[slug] ?? [slug];
+  // Also include products tagged under any direct child of the slug.
+  const kids = collections.filter((c) => c.parentSlug === slug).map((c) => c.slug);
+  const all = new Set<string>([...base, ...kids]);
+  // Children may themselves aggregate (e.g. gift-sets has a festive-gifts child).
+  for (const k of kids) {
+    for (const extra of COLLECTION_AGGREGATION[k] ?? []) all.add(extra);
+  }
+  return Array.from(all);
+};
+
 export function ShopClient({
   products,
   collections,
@@ -49,9 +66,15 @@ export function ShopClient({
       if (collection !== "all") {
         if (collection === "best-sellers" && !p.bestSeller) return false;
         else if (collection === "new-arrivals" && !p.newArrival) return false;
-        else if (collection !== "best-sellers" && collection !== "new-arrivals" && !p.collections.includes(collection)) return false;
+        else if (collection !== "best-sellers" && collection !== "new-arrivals") {
+          const match = expandSlug(collection, collections);
+          if (!p.collections.some((s) => match.includes(s))) return false;
+        }
       }
-      if (subCategories.length && !p.collections.some((s) => subCategories.includes(s))) return false;
+      if (subCategories.length) {
+        const expanded = subCategories.flatMap((s) => expandSlug(s, collections));
+        if (!p.collections.some((s) => expanded.includes(s))) return false;
+      }
       if (types.length && !types.includes(p.category)) return false;
       if (fragrances.length && !p.fragrance.split(",").some((f) => fragrances.includes(f.trim()))) return false;
       if (availability === "in-stock" && (p.stock <= 0 || p.status === "out_of_stock")) return false;
@@ -88,7 +111,7 @@ export function ShopClient({
     (priceMax < 2500 ? 1 : 0);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+    <div className="lg:grid lg:gap-8 lg:grid-cols-[240px_1fr]">
       {/* Sidebar */}
       <aside className={cn(
         "lg:sticky lg:top-24 h-max rounded-2xl border hairline bg-ivory-50 p-5",
