@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { isAdmin } from "@/lib/auth";
@@ -11,5 +12,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // gets bounced back to the storefront.
   const admin = await isAdmin();
   if (!admin) redirect("/");
-  return <AdminShell>{children}</AdminShell>;
+  return (
+    <ClerkProvider>
+      <AdminShell>{children}</AdminShell>
+    </ClerkProvider>
+  );
 }
