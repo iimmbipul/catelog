@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ShopClient } from "@/components/site/ShopClient";
 import { Arrow } from "@/components/ui/Icons";
 import { getCollectionBySlug, getCollections, getProducts, toProductSummary } from "@/lib/catalog";
+import { COLLECTION_SEO, collectionMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -18,7 +19,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const c = await getCollectionBySlug(slug);
-  return { title: c?.title ?? "Collection" };
+  return c ? collectionMetadata(c) : { title: "Collection not found" };
 }
 
 export default async function CollectionPage({ params }: Props) {
@@ -27,6 +28,8 @@ export default async function CollectionPage({ params }: Props) {
   if (!collection) return notFound();
   const [all, allCollections] = await Promise.all([getProducts(), getCollections()]);
   const children = allCollections.filter((c) => c.parentSlug === collection.slug);
+  const seo = COLLECTION_SEO[collection.slug];
+  const related = allCollections.filter((c) => seo?.related?.includes(c.slug));
   // "best-sellers" and "new-arrivals" are admin-curated via the checkboxes on
   // the product form (product.bestSeller / product.newArrival). Every other
   // collection uses collection tags, with categories bubbling up to their parent.
@@ -134,6 +137,28 @@ export default async function CollectionPage({ params }: Props) {
           <ShopClient products={products.map(toProductSummary)} collections={allCollections} initialCollection={collection.slug} />
         )}
       </section>
+
+      {seo?.intro && (
+        <section className="container-page mt-16">
+          <div className="max-w-3xl">
+            <h2 className="heading-serif text-editorial">About our {collection.title.replace(/ Collection$/, "").toLowerCase()} candles</h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-cocoa-500">{seo.intro}</p>
+            {related.length > 0 && (
+              <p className="mt-4 text-sm text-cocoa-500">
+                You may also like:{" "}
+                {related.map((c, i) => (
+                  <span key={c.id}>
+                    {i > 0 && " · "}
+                    <Link href={`/collections/${c.slug}`} className="link-underline text-cocoa-700">
+                      {c.title}
+                    </Link>
+                  </span>
+                ))}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
     </>
   );
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Heart, Bag, ChevronDown, Truck, Leaf, Flame, Package } from "@/components/ui/Icons";
 import { cn } from "@/lib/cn";
-import { money, pct, computeDiscount } from "@/lib/format";
+import { money, pct, computeDiscount, cleanWax, averageRating } from "@/lib/format";
 import type { Product, Review } from "@/lib/types";
 import { useCart, useUI, useWishlist } from "@/lib/store";
 import { FRAGRANCES } from "@/lib/fragrances";
@@ -15,6 +15,9 @@ type Tab = typeof TABS[number];
 export function ProductDetail({ product, reviews }: { product: Product; reviews: Review[] }) {
   const hasColors = Array.isArray(product.colors) && product.colors.length > 0;
   const [active, setActive] = useState(0);
+  // Fade only when a shopper changes the image. Chrome ignores anything at opacity
+  // 0 when measuring LCP, so fading in on load hid this image from that measure.
+  const [imageChanged, setImageChanged] = useState(false);
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState<Tab>("Description");
   // Default the fragrance selector to the product's own listed fragrance
@@ -79,7 +82,7 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
           {gallery.map((img, i) => (
             <button
               key={`${img.url}-${i}`}
-              onClick={() => setActive(i)}
+              onClick={() => { setActive(i); setImageChanged(true); }}
               className={cn(
                 "relative aspect-[4/5] w-20 flex-none overflow-hidden rounded-xl border",
                 active === i ? "border-cocoa-700" : "border-transparent opacity-70 hover:opacity-100"
@@ -95,7 +98,7 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
             src={activeImage?.url ?? product.images[0]?.url}
             alt={activeImage?.alt ?? product.name}
             fill
-            className="object-cover transition-transform duration-700 ease-expo hover:scale-105 animate-fade-up"
+            className={cn("object-cover transition-transform duration-700 ease-expo hover:scale-105", imageChanged && "animate-fade-up")}
             preload
             sizes="(min-width: 1024px) 55vw, 100vw"
           />
@@ -126,7 +129,7 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
 
         <div className="mt-8 grid grid-cols-2 gap-3 text-xs text-cocoa-500 sm:grid-cols-4">
           <Meta label="Fragrance" value={fragrance} />
-          <Meta label="Wax" value={product.waxType} />
+          <Meta label="Wax" value={cleanWax(product.waxType)} />
           <Meta label="Weight" value={`${product.weightGrams} g`} />
           <Meta label="Burn" value={`${product.burnTimeHours} h`} />
         </div>
@@ -142,7 +145,7 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
                 <button
                   key={c.name}
                   type="button"
-                  onClick={() => { setColorIdx(i); setActive(0); }}
+                  onClick={() => { setColorIdx(i); setActive(0); setImageChanged(true); }}
                   title={c.name}
                   aria-label={`Select ${c.name}`}
                   aria-pressed={colorIdx === i}
@@ -217,7 +220,7 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
 
         <div className="mt-8 grid grid-cols-2 gap-3 text-xs text-cocoa-500">
           <ShipRow icon={Truck} title="Free shipping" body="On orders over ₹999" />
-          <ShipRow icon={Leaf} title="Clean burn" body="Soy & coconut wax" />
+          <ShipRow icon={Leaf} title={/gel/i.test(product.waxType) ? "Wax" : "Clean burn"} body={cleanWax(product.waxType)} />
           <ShipRow icon={Flame} title={`${product.burnTimeHours}-hr burn`} body="Trim wick before each use" />
           <ShipRow icon={Package} title="Gift-wrapped" body="Complimentary on hampers" />
         </div>
@@ -244,6 +247,9 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
         {reviews.length > 0 && (
           <div className="mt-10">
             <h3 className="font-serif text-2xl text-cocoa-700">Reviews</h3>
+            <p className="mt-1 text-sm text-cocoa-500">
+              {averageRating(reviews)} out of 5 from {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+            </p>
             <ul className="mt-4 space-y-4">
               {reviews.slice(0, 3).map((r) => (
                 <li key={r.id} className="rounded-2xl border hairline p-5">

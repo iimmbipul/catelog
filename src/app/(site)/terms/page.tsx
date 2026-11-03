@@ -1,6 +1,12 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Terms" };
+export const metadata = pageMetadata({
+  title: "Terms of Service",
+  description:
+    "The terms that apply when you place an order with White & Wick, including our shipping, returns and privacy policies.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (
@@ -8,7 +14,7 @@ export default function TermsPage() {
       <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Terms" }]} />
       <h1 className="mt-6 heading-serif text-hero">Terms of Service</h1>
       <div className="mt-8 space-y-4 text-sm leading-relaxed text-cocoa-500">
-        <p>By placing an order on whiteandwick.co you agree to our shipping, returns, and privacy terms as listed on this site. Prices are quoted in INR and inclusive of applicable taxes.</p>
+        <p>By placing an order on whiteandwick.com you agree to our shipping, returns, and privacy terms as listed on this site. Prices are quoted in INR and inclusive of applicable taxes.</p>
         <p>We reserve the right to cancel any order at our discretion — for example, on suspected fraud, or on items priced incorrectly due to a technical error — and refund any amount paid.</p>
       </div>
     </div>

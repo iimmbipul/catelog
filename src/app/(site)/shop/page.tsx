@@ -1,8 +1,14 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ShopClient } from "@/components/site/ShopClient";
 import { getCollections, getProducts, toProductSummary } from "@/lib/catalog";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Shop candles" };
+export const metadata = pageMetadata({
+  title: "Shop Scented Candles Online",
+  description:
+    "Browse every White & Wick candle: soy and gel wax candles, floral bouquets, diyas and gift sets. Filter by collection, fragrance and price.",
+  path: "/shop",
+});
 
 export default async function ShopPage() {
   const [products, collections] = await Promise.all([getProducts(), getCollections()]);

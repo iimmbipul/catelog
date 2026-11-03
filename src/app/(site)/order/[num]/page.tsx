@@ -4,10 +4,11 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { getOrderByNumber } from "@/lib/db";
 import { money, shortDate } from "@/lib/format";
+import { privateMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ num: string }> };
 
-export const metadata = { title: "Order confirmation" };
+export const metadata = privateMetadata("Order confirmation");
 
 export default async function OrderConfirmation({ params }: Props) {
   const { num } = await params;

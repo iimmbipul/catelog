@@ -84,7 +84,7 @@ const DEFAULT_SETTINGS: Settings = {
     whatsapp: "https://wa.me/919999999999",
   },
   contact: {
-    email: "hello@whiteandwick.co",
+    email: "whiteandwick@gmail.com",
     phone: "+91 99999 99999",
     address: "Studio, Bengaluru, India",
   },

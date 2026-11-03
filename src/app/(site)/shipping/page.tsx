@@ -1,6 +1,12 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Shipping" };
+export const metadata = pageMetadata({
+  title: "Shipping & Delivery",
+  description:
+    "We ship across India in 3 to 6 business days. Orders above ₹999 ship free, and a flat ₹60 applies below that. Tracking comes by WhatsApp and email.",
+  path: "/shipping",
+});
 
 export default function ShippingPage() {
   return (

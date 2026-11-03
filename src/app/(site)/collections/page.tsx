@@ -3,8 +3,14 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Arrow } from "@/components/ui/Icons";
 import { getCollections, getProducts } from "@/lib/catalog";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Collections" };
+export const metadata = pageMetadata({
+  title: "Candle Collections by Mood & Occasion",
+  description:
+    "Explore floral, minimal and luxury candles, plus gift sets and festive edits for Diwali, Rakhi, weddings and birthdays. Hand-poured in small batches.",
+  path: "/collections",
+});
 
 export default async function CollectionsIndex() {
   const [allCollections, products] = await Promise.all([getCollections(), getProducts()]);

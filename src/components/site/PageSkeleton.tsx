@@ -1,6 +1,8 @@
-/* Shown the moment a link is clicked, for pages that can't be served from a
- * prefetch (search, account, order status). */
-export default function Loading() {
+/* Loading state for routes that render on request. Keep it off prerendered
+ * pages: a loading.tsx wraps a page in Suspense, so its real content ships in a
+ * hidden div and this skeleton takes its place in the page's main content,
+ * which is what crawlers that don't run JavaScript read. */
+export function PageSkeleton() {
   return (
     <div className="container-page pt-8 lg:pt-14" role="status" aria-label="Loading">
       <div className="h-3 w-32 animate-pulse rounded-full bg-ivory-100" />

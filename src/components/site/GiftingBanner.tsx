@@ -13,7 +13,7 @@ export function GiftingBanner({ fallbackImage, banner }: Props) {
   return (
     <section className="container-page mt-28">
       <div className="relative overflow-hidden rounded-3xl bg-cocoa-700 text-ivory-50">
-        <Image src={image} alt="Gifting" fill className="object-cover opacity-60" sizes="100vw" />
+        <Image src={image} alt="White & Wick gift box tied with a gold satin ribbon" fill className="object-cover opacity-60" sizes="100vw" />
         <div className="relative grid gap-10 p-10 lg:grid-cols-[1.2fr_1fr] lg:p-16">
           <div>
             <p className="eyebrow text-ivory-50/70">{banner?.eyebrow || "Gifting"}</p>

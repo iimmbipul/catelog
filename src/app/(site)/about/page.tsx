@@ -3,8 +3,14 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { FeatureRow } from "@/components/site/FeatureRow";
 import { getSettings } from "@/lib/catalog";
 import { IMG } from "@/lib/images";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "About" };
+export const metadata = pageMetadata({
+  title: "About Our Hand-Poured Candles",
+  description:
+    "Meet White & Wick, a Bengaluru candle studio making hand-poured candles in small batches for everyday rituals, gifting and festive moments.",
+  path: "/about",
+});
 
 export default async function AboutPage() {
   const { about } = await getSettings();
@@ -32,7 +38,7 @@ export default async function AboutPage() {
       <section className="container-page mt-12">
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ivory-100 lg:col-span-2">
-            <Image src={image} alt="Studio" fill className="object-contain" sizes="(min-width: 1024px) 66vw, 100vw" />
+            <Image src={image} alt="White & Wick jar candle and gift box with sculpted wax candles" fill className="object-contain" sizes="(min-width: 1024px) 66vw, 100vw" />
           </div>
           <div className="rounded-2xl border hairline bg-ivory-50 p-8">
             <p className="eyebrow">{about?.craftEyebrow || "Our craft"}</p>

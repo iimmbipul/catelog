@@ -7,8 +7,14 @@ import { SectionHeader } from "@/components/site/SectionHeader";
 import { Arrow, Gift, Package, Sparkle } from "@/components/ui/Icons";
 import { getCollectionBySlug, getProducts, toProductSummary } from "@/lib/catalog";
 import { IMG } from "@/lib/images";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Gifting" };
+export const metadata = pageMetadata({
+  title: "Candle Gifts & Custom Hampers",
+  description:
+    "Candle gift sets and custom hampers for weddings, corporate gifting and thank-yous, with free gift-wrap on hampers. Hand-poured by White & Wick.",
+  path: "/gifting",
+});
 
 const OCCASIONS = [
   { title: "Weddings", body: "Curated hampers with custom cards and personalised labels." },
@@ -32,7 +38,7 @@ export default async function GiftingPage() {
       <section className="container-page mt-8">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-ivory-100 lg:aspect-auto">
-            <Image src={IMG.gifting} alt="Gifting" fill className="object-contain" preload sizes="(min-width: 1024px) 55vw, 100vw" />
+            <Image src={IMG.gifting} alt="White & Wick gift box tied with a gold satin ribbon" fill className="object-contain" preload sizes="(min-width: 1024px) 55vw, 100vw" />
           </div>
           <div className="flex flex-col justify-center rounded-3xl border hairline bg-ivory-50 p-8 lg:p-12">
             <p className="eyebrow">Gifting</p>

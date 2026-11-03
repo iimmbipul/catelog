@@ -1,8 +1,14 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { getFaqs } from "@/lib/catalog";
 import { FaqAccordion } from "@/components/site/FaqAccordion";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "FAQs" };
+export const metadata = pageMetadata({
+  title: "Candle & Order FAQs",
+  description:
+    "Answers to common questions about White & Wick candles, orders, shipping and returns.",
+  path: "/faqs",
+});
 
 export default async function FaqsPage() {
   const faqs = await getFaqs();

@@ -10,6 +10,16 @@ import { Gallery } from "@/components/site/Gallery";
 import { getCollections, getInstagramPosts, getProducts, getReviews, getSettings, toProductSummary } from "@/lib/catalog";
 import { IMG } from "@/lib/images";
 import { FloralSprig } from "@/components/site/Illustrations";
+import { JsonLd } from "@/components/site/JsonLd";
+import { organizationSchema, websiteSchema } from "@/lib/schema";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Handmade Scented Candles & Gifts in India | White & Wick",
+  description:
+    "Hand-poured scented candles, floral candle bouquets, Diwali diyas and gift sets, made in Bengaluru. Choose from 16 fragrances. Free shipping above ₹999.",
+  path: "/",
+});
 
 export default async function HomePage() {
   const [products, collections, reviews, settings, instagramPosts] = await Promise.all([
@@ -44,6 +54,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={organizationSchema(settings)} />
+      <JsonLd data={websiteSchema()} />
       <Hero settings={settings} />
 
       <SprigDivider />

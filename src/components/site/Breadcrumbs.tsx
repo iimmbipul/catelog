@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { JsonLd } from "@/components/site/JsonLd";
+import { breadcrumbSchema } from "@/lib/schema";
 
 export function Breadcrumbs({ items }: { items: { label: string; href?: string }[] }) {
   return (
     <nav className="text-xs text-cocoa-400">
+      <JsonLd data={breadcrumbSchema(items)} />
       <ol className="flex flex-wrap items-center gap-2">
         {items.map((it, i) => (
           <li key={i} className="flex items-center gap-2">

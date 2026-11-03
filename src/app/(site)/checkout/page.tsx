@@ -1,8 +1,9 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { CheckoutClient } from "@/components/site/CheckoutClient";
 import { getCoupons } from "@/lib/catalog";
+import { privateMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Checkout" };
+export const metadata = privateMetadata("Checkout");
 
 export default async function CheckoutPage() {
   const coupons = await getCoupons();

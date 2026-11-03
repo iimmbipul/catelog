@@ -3,10 +3,11 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { getProducts } from "@/lib/catalog";
 import { money } from "@/lib/format";
+import { privateMetadata } from "@/lib/seo";
 
 type Props = { searchParams: Promise<{ q?: string }> };
 
-export const metadata = { title: "Search" };
+export const metadata = privateMetadata("Search");
 
 export default async function SearchPage({ searchParams }: Props) {
   const { q } = await searchParams;

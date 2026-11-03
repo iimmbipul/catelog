@@ -52,6 +52,9 @@ export async function Footer() {
               <li><Link className="hover:text-cocoa-700" href="/collections/floral">Floral</Link></li>
               <li><Link className="hover:text-cocoa-700" href="/collections/luxury">Luxury</Link></li>
               <li><Link className="hover:text-cocoa-700" href="/collections/gift-sets">Gift Sets</Link></li>
+              <li><Link className="hover:text-cocoa-700" href="/collections/minimal">Minimal</Link></li>
+              <li><Link className="hover:text-cocoa-700" href="/collections/diwali">Diwali</Link></li>
+              <li><Link className="hover:text-cocoa-700" href="/collections/wedding-gifts">Wedding Favours</Link></li>
             </ul>
           </div>
 
