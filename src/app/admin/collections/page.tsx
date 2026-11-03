@@ -1,10 +1,12 @@
 import { PageHeader } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getCollections, getProducts } from "@/lib/db";
 import { CollectionsClient } from "./CollectionsClient";
 
 export const metadata = { title: "Admin — Collections" };
 
 export default async function AdminCollectionsPage() {
+  await requireAdmin();
   const [collections, products] = await Promise.all([getCollections(), getProducts()]);
   // Overlay live product counts. Parent collections include products from
   // their child categories too.

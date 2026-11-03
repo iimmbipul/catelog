@@ -1,10 +1,12 @@
 import { PageHeader } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getInstagramPosts } from "@/lib/db";
 import { InstagramClient } from "./InstagramClient";
 
 export const metadata = { title: "Admin — Instagram gallery" };
 
 export default async function InstagramAdminPage() {
+  await requireAdmin();
   const posts = await getInstagramPosts();
   return (
     <>

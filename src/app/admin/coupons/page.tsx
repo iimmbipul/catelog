@@ -1,4 +1,5 @@
 import { PageHeader, Card, StatusPill } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getCoupons } from "@/lib/db";
 import { money } from "@/lib/format";
 import { CouponsClient } from "./CouponsClient";
@@ -6,6 +7,7 @@ import { CouponsClient } from "./CouponsClient";
 export const metadata = { title: "Admin — Coupons & Discounts" };
 
 export default async function CouponsPage() {
+  await requireAdmin();
   const coupons = await getCoupons();
   return (
     <>

@@ -1,8 +1,10 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { getSettings, saveSettings } from "@/lib/db";
 
 export async function saveAboutAction(fd: FormData) {
+  await requireAdmin();
   const s = await getSettings();
   const next = {
     ...s,

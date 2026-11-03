@@ -1,17 +1,13 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
-import { isAdmin } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 
 export const metadata = { title: "Admin" };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  // Clerk already blocks unauthenticated access via proxy.ts. This second
-  // check enforces the email allowlist: any signed-in Clerk user whose
-  // primary email isn't in ADMIN_EMAILS (default: whiteandwick@gmail.com)
-  // gets bounced back to the storefront.
-  const admin = await isAdmin();
-  if (!admin) redirect("/");
+  // Keeps non-admins out of the shell. This does not protect the pages or
+  // server actions underneath: each one calls requireAdmin() itself.
+  await requireAdmin();
   return (
     <ClerkProvider>
       <AdminShell>{children}</AdminShell>

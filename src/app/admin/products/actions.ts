@@ -1,5 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { deleteProduct, getProducts, saveProducts, upsertProduct } from "@/lib/db";
 import type { Product, ProductColor } from "@/lib/types";
 
@@ -30,6 +31,7 @@ function ps(input: FormData, name: string, fallback = "") {
 }
 
 export async function saveProductAction(input: FormData) {
+  await requireAdmin();
   const id = ps(input, "id") || `p_${Date.now()}`;
   const name = ps(input, "name");
   const slug = ps(input, "slug") || slugify(name);
@@ -109,6 +111,7 @@ export async function saveProductAction(input: FormData) {
 }
 
 export async function deleteProductAction(id: string) {
+  await requireAdmin();
   await deleteProduct(id);
   revalidatePath("/admin/products");
   revalidatePath("/shop");
@@ -116,6 +119,7 @@ export async function deleteProductAction(id: string) {
 }
 
 export async function duplicateProductAction(id: string) {
+  await requireAdmin();
   const products = await getProducts();
   const p = products.find((x) => x.id === id);
   if (!p) return { ok: false };
@@ -133,6 +137,7 @@ export async function duplicateProductAction(id: string) {
 }
 
 export async function updateStockAction(id: string, stock: number) {
+  await requireAdmin();
   const products = await getProducts();
   const idx = products.findIndex((p) => p.id === id);
   if (idx < 0) return { ok: false };

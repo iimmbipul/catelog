@@ -1,9 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { getCollections, saveCollections } from "@/lib/db";
 import type { Collection } from "@/lib/types";
 
 export async function toggleCollectionPinAction(id: string) {
+  await requireAdmin();
   const list = await getCollections();
   const idx = list.findIndex((c) => c.id === id);
   if (idx < 0) return { ok: false };
@@ -24,6 +26,7 @@ function slugify(s: string) {
 }
 
 export async function saveCollectionAction(fd: FormData) {
+  await requireAdmin();
   const id = String(fd.get("id") ?? "") || `c_${Date.now()}`;
   const list = await getCollections();
   const existing = list.find((c) => c.id === id);
@@ -58,6 +61,7 @@ export async function saveCollectionAction(fd: FormData) {
 }
 
 export async function deleteCollectionAction(id: string) {
+  await requireAdmin();
   const list = await getCollections();
   const target = list.find((c) => c.id === id);
   if (!target) return { ok: false };

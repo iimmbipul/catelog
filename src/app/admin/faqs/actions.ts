@@ -1,9 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { getFaqs, saveFaqs } from "@/lib/db";
 import type { FAQ } from "@/lib/types";
 
 export async function saveFaqAction(fd: FormData) {
+  await requireAdmin();
   const id = String(fd.get("id") ?? "") || `f_${Date.now()}`;
   const list = await getFaqs();
   const existing = list.find((f) => f.id === id);
@@ -24,6 +26,7 @@ export async function saveFaqAction(fd: FormData) {
 }
 
 export async function deleteFaqAction(id: string) {
+  await requireAdmin();
   const list = await getFaqs();
   await saveFaqs(list.filter((f) => f.id !== id));
   revalidatePath("/admin/faqs");

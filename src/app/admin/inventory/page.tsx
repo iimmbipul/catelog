@@ -1,4 +1,5 @@
 import { PageHeader, Card, StatusPill, StatCard } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getProducts } from "@/lib/db";
 import { money } from "@/lib/format";
 import { InventoryTable } from "./InventoryTable";
@@ -6,6 +7,7 @@ import { InventoryTable } from "./InventoryTable";
 export const metadata = { title: "Admin — Inventory" };
 
 export default async function InventoryPage() {
+  await requireAdmin();
   const products = await getProducts();
   const low = products.filter((p) => p.stock > 0 && p.stock <= p.lowStockThreshold);
   const oos = products.filter((p) => p.stock === 0);

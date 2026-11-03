@@ -10,7 +10,9 @@ export const metadata = { title: "My account" };
 
 export default async function AccountPage() {
   const user = await currentUser();
-  const email = user?.emailAddresses?.[0]?.emailAddress?.toLowerCase() ?? null;
+  // Orders are matched by email, so only a verified address can claim them.
+  const primary = user?.primaryEmailAddress;
+  const email = primary?.verification?.status === "verified" ? primary.emailAddress.toLowerCase() : null;
   const firstName = user?.firstName ?? user?.fullName?.split(" ")[0] ?? null;
   const greeting = firstName || email?.split("@")[0] || "there";
 

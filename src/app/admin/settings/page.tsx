@@ -1,10 +1,12 @@
 import { PageHeader, Card } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getSettings } from "@/lib/db";
 import { SettingsForm } from "./SettingsForm";
 
 export const metadata = { title: "Admin — Settings" };
 
 export default async function SettingsPage() {
+  await requireAdmin();
   const settings = await getSettings();
   return (
     <>

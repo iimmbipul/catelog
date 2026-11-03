@@ -1,10 +1,12 @@
 import { PageHeader, Card } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getFaqs } from "@/lib/db";
 import { FaqsClient } from "./FaqsClient";
 
 export const metadata = { title: "Admin — FAQs" };
 
 export default async function FaqsAdminPage() {
+  await requireAdmin();
   const faqs = await getFaqs();
   return (
     <>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { PageHeader, Card, StatCard, StatusPill } from "@/components/admin/ui";
 import { SalesChart } from "@/components/admin/SalesChart";
+import { requireAdmin } from "@/lib/auth";
 import { getCustomers, getGiftEnquiries, getOrders, getProducts } from "@/lib/db";
 import { money, shortDate } from "@/lib/format";
 import { Arrow } from "@/components/ui/Icons";
@@ -9,6 +10,7 @@ import { Arrow } from "@/components/ui/Icons";
 export const metadata = { title: "Admin — Dashboard" };
 
 export default async function AdminDashboard() {
+  await requireAdmin();
   const [products, orders, customers, enquiries] = await Promise.all([
     getProducts(),
     getOrders(),

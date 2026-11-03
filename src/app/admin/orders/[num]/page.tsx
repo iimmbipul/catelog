@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PageHeader, Card } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getOrderByNumber } from "@/lib/db";
 import { money, shortDate } from "@/lib/format";
 import { OrderStatusControls } from "./OrderStatusControls";
@@ -8,6 +9,7 @@ import { OrderStatusControls } from "./OrderStatusControls";
 type Props = { params: Promise<{ num: string }> };
 
 export default async function OrderDetailPage({ params }: Props) {
+  await requireAdmin();
   const { num } = await params;
   const order = await getOrderByNumber(num);
   if (!order) return notFound();
