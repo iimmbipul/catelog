@@ -14,11 +14,8 @@ export default clerkMiddleware(async (auth, req) => {
   }
 });
 
+/* Only these routes read the session. Leaving the storefront out keeps Clerk off
+ * the request path for shoppers, so cached pages are served directly. */
 export const config = {
-  matcher: [
-    // Skip Next internals and all static files unless found in search params.
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
-    "/__clerk/:path*",
-  ],
+  matcher: ["/account", "/admin/:path*", "/sign-in/:path*", "/sign-up/:path*", "/__clerk/:path*"],
 };

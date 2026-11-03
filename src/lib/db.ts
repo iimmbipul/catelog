@@ -11,7 +11,7 @@ import {
   setDoc,
   writeBatch,
 } from "firebase/firestore";
-import { unstable_noStore as noStore } from "next/cache";
+import { revalidateTag, unstable_noStore as noStore } from "next/cache";
 import { COL, SETTINGS_DOC, getFirestoreDb } from "./firebase";
 import type {
   Banner,
@@ -27,7 +27,24 @@ import type {
   Settings,
 } from "./types";
 
+/* Cache tags for the collections the storefront reads through catalog.ts. */
+export const CATALOG_TAGS = {
+  products: "catalog:products",
+  collections: "catalog:collections",
+  settings: "catalog:settings",
+  coupons: "catalog:coupons",
+  reviews: "catalog:reviews",
+  faqs: "catalog:faqs",
+  instagramPosts: "catalog:instagram-posts",
+} as const;
+
 /* -------- helpers -------- */
+
+/* Drops a catalog cache entry so the next storefront request re-reads Firestore.
+ * The writers below only run inside server actions, where this is allowed. */
+function expireCatalog(tag: string) {
+  revalidateTag(tag, { expire: 0 });
+}
 
 /* Firestore rejects any field whose value is exactly `undefined`. Strip
  * them recursively (arrays keep their items, objects lose the undefined keys). */
@@ -198,6 +215,7 @@ async function replaceCollection<T extends { id: string }>(colName: string, item
 
 export async function saveProducts(products: Product[]) {
   await replaceCollection(COL.products, products);
+  expireCatalog(CATALOG_TAGS.products);
 }
 export async function saveOrders(orders: Order[]) {
   await replaceCollection(COL.orders, orders);
@@ -220,21 +238,25 @@ export async function markOrderPaid(orderNumber: string, paymentId: string) {
 }
 export async function saveCoupons(coupons: Coupon[]) {
   await replaceCollection(COL.coupons, coupons);
+  expireCatalog(CATALOG_TAGS.coupons);
 }
 export async function saveBanners(banners: Banner[]) {
   await replaceCollection(COL.banners, banners);
 }
 export async function saveReviews(reviews: Review[]) {
   await replaceCollection(COL.reviews, reviews);
+  expireCatalog(CATALOG_TAGS.reviews);
 }
 export async function saveFaqs(faqs: FAQ[]) {
   await replaceCollection(COL.faqs, faqs);
+  expireCatalog(CATALOG_TAGS.faqs);
 }
 export async function saveSettings(settings: Settings) {
   await setDoc(
     doc(getFirestoreDb(), COL.settings, SETTINGS_DOC),
     stripUndefined(settings) as object,
   );
+  expireCatalog(CATALOG_TAGS.settings);
 }
 export async function saveGiftEnquiries(list: GiftEnquiry[]) {
   await replaceCollection(COL.giftEnquiries, list);
@@ -244,9 +266,11 @@ export async function saveCustomers(list: Customer[]) {
 }
 export async function saveCollections(list: Collection[]) {
   await replaceCollection(COL.collections, list);
+  expireCatalog(CATALOG_TAGS.collections);
 }
 export async function saveInstagramPosts(list: InstagramPost[]) {
   await replaceCollection(COL.instagramPosts, list);
+  expireCatalog(CATALOG_TAGS.instagramPosts);
 }
 
 /* -------- Single-doc helpers -------- */
@@ -256,8 +280,10 @@ export async function upsertProduct(product: Product) {
     doc(getFirestoreDb(), COL.products, product.id),
     stripUndefined(product) as object,
   );
+  expireCatalog(CATALOG_TAGS.products);
 }
 
 export async function deleteProduct(id: string) {
   await deleteDoc(doc(getFirestoreDb(), COL.products, id));
+  expireCatalog(CATALOG_TAGS.products);
 }

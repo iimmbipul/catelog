@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { CheckoutClient } from "@/components/site/CheckoutClient";
-import { getCoupons } from "@/lib/db";
+import { getCoupons } from "@/lib/catalog";
 
 export const metadata = { title: "Checkout" };
 

@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, Bag } from "@/components/ui/Icons";
 import { money, pct, computeDiscount } from "@/lib/format";
-import type { Product } from "@/lib/types";
+import type { ProductSummary } from "@/lib/types";
 import { useCart, useUI, useWishlist } from "@/lib/store";
 import { cn } from "@/lib/cn";
 
-export function ProductCard({ product, compact }: { product: Product; compact?: boolean }) {
+export function ProductCard({ product, compact, eager }: { product: ProductSummary; compact?: boolean; eager?: boolean }) {
   const add = useCart((s) => s.add);
   const showToast = useUI((s) => s.showToast);
   const toggle = useWishlist((s) => s.toggle);
@@ -23,8 +23,9 @@ export function ProductCard({ product, compact }: { product: Product; compact?: 
             src={product.images[0]?.url}
             alt={product.images[0]?.alt ?? product.name}
             fill
+            loading={eager ? "eager" : "lazy"}
             className="product-img object-cover"
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 70vw"
           />
         </Link>
 

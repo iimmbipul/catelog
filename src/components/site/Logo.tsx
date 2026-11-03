@@ -14,7 +14,7 @@ export function Logo({ className, small }: { className?: string; small?: boolean
         alt="White & Wick"
         width={size * 2}
         height={size * 2}
-        priority={!small}
+        preload={!small}
         sizes={`${size}px`}
         style={{ width: size, height: size }}
         className="rounded-full object-contain"

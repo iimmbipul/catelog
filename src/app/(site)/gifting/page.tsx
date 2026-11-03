@@ -5,7 +5,7 @@ import { GiftingForm } from "@/components/site/GiftingForm";
 import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { Arrow, Gift, Package, Sparkle } from "@/components/ui/Icons";
-import { getCollectionBySlug, getProducts } from "@/lib/db";
+import { getCollectionBySlug, getProducts, toProductSummary } from "@/lib/catalog";
 import { IMG } from "@/lib/images";
 
 export const metadata = { title: "Gifting" };
@@ -32,7 +32,7 @@ export default async function GiftingPage() {
       <section className="container-page mt-8">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-ivory-100 lg:aspect-auto">
-            <Image src={IMG.gifting} alt="Gifting" fill className="object-contain" priority sizes="(min-width: 1024px) 55vw, 100vw" />
+            <Image src={IMG.gifting} alt="Gifting" fill className="object-contain" preload sizes="(min-width: 1024px) 55vw, 100vw" />
           </div>
           <div className="flex flex-col justify-center rounded-3xl border hairline bg-ivory-50 p-8 lg:p-12">
             <p className="eyebrow">Gifting</p>
@@ -71,7 +71,7 @@ export default async function GiftingPage() {
 
       <section className="container-page mt-24">
         <SectionHeader eyebrow="Ready-to-gift" title="Ready sets." href="/collections/gift-sets" cta="Shop all sets" />
-        <ProductCarousel products={giftProducts} />
+        <ProductCarousel products={giftProducts.map(toProductSummary)} />
       </section>
 
       <section className="container-page mt-24">

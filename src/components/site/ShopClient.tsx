@@ -1,7 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { ProductCard } from "./ProductCard";
-import type { Collection, Product } from "@/lib/types";
+import type { Collection, ProductSummary } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { ChevronDown, Close } from "@/components/ui/Icons";
 import { FRAGRANCES } from "@/lib/fragrances";
@@ -38,7 +38,7 @@ export function ShopClient({
   collections,
   initialCollection,
 }: {
-  products: Product[];
+  products: ProductSummary[];
   collections: Collection[];
   initialCollection?: string;
 }) {
@@ -233,8 +233,9 @@ export function ShopClient({
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-            {filtered.map((p) => (
-              <ProductCard key={p.id} product={p} />
+            {/* On /shop the first row is the largest thing on screen, so it can't wait for lazy loading. */}
+            {filtered.map((p, i) => (
+              <ProductCard key={p.id} product={p} eager={!initialCollection && i < 3} />
             ))}
           </div>
         )}

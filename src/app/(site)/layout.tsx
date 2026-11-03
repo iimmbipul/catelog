@@ -3,7 +3,7 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { LeafBranch } from "@/components/site/Illustrations";
 import { Toaster } from "@/components/site/Toaster";
-import { getSettings } from "@/lib/db";
+import { getSettings } from "@/lib/catalog";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 

@@ -3,10 +3,16 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ProductDetail } from "@/components/site/ProductDetail";
 import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { SectionHeader } from "@/components/site/SectionHeader";
-import { getProductBySlug, getProducts, getReviews } from "@/lib/db";
+import { getProductBySlug, getProducts, getReviews, toProductSummary } from "@/lib/catalog";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
+
+/* Prerenders known products. Ones added later render on first visit, then cache. */
+export async function generateStaticParams() {
+  const products = await getProducts();
+  return products.map((p) => ({ slug: p.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -48,14 +54,14 @@ export default async function ProductPage({ params }: Props) {
       {related.length > 0 && (
         <section className="container-page mt-24">
           <SectionHeader eyebrow="Related" title="Fragrances that pair well." href="/shop" cta="Shop all" />
-          <ProductCarousel products={related} />
+          <ProductCarousel products={related.map(toProductSummary)} />
         </section>
       )}
 
       {alsoLike.length > 0 && (
         <section className="container-page mt-24">
           <SectionHeader eyebrow="Also loved" title="You may also like." href="/shop" cta="Explore" />
-          <ProductCarousel products={alsoLike} />
+          <ProductCarousel products={alsoLike.map(toProductSummary)} />
         </section>
       )}
     </>

@@ -4,10 +4,16 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ShopClient } from "@/components/site/ShopClient";
 import { Arrow } from "@/components/ui/Icons";
-import { getCollectionBySlug, getCollections, getProducts } from "@/lib/db";
+import { getCollectionBySlug, getCollections, getProducts, toProductSummary } from "@/lib/catalog";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
+
+/* Prerenders known collections. Ones added later render on first visit, then cache. */
+export async function generateStaticParams() {
+  const collections = await getCollections();
+  return collections.map((c) => ({ slug: c.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -67,7 +73,7 @@ export default async function CollectionPage({ params }: Props) {
 
       <section className="container-page mt-8">
         <div className="relative overflow-hidden rounded-3xl bg-ivory-100 aspect-[16/7]">
-          <Image src={collection.image} alt={collection.title} fill className="object-cover" priority sizes="100vw" />
+          <Image src={collection.image} alt={collection.title} fill className="object-cover" preload sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-r from-cocoa-700/70 via-cocoa-700/25 to-transparent" />
           <div className="absolute inset-y-0 left-0 flex max-w-2xl flex-col justify-end p-8 text-ivory-50 lg:p-14">
             <p className="eyebrow text-ivory-50/70">{collection.subtitle}</p>
@@ -125,7 +131,7 @@ export default async function CollectionPage({ params }: Props) {
             </p>
           </div>
         ) : (
-          <ShopClient products={products} collections={allCollections} initialCollection={collection.slug} />
+          <ShopClient products={products.map(toProductSummary)} collections={allCollections} initialCollection={collection.slug} />
         )}
       </section>
     </>

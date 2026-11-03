@@ -49,6 +49,27 @@ export interface Product {
   colors?: ProductColor[];
 }
 
+/* The fields product cards and shop filters use. Lists send this to the browser
+ * rather than the full Product, whose descriptions, notes and SEO text cards never show. */
+export type ProductSummary = Pick<
+  Product,
+  | "id"
+  | "slug"
+  | "name"
+  | "category"
+  | "collections"
+  | "images"
+  | "mrp"
+  | "price"
+  | "discountPercent"
+  | "stock"
+  | "fragrance"
+  | "status"
+  | "createdAt"
+  | "bestSeller"
+  | "newArrival"
+>;
+
 export interface Collection {
   id: string;
   slug: string;

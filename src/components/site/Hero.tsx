@@ -29,7 +29,7 @@ export function Hero({ settings }: { settings: Settings }) {
               src={homepage.heroImage}
               alt="White & Wick hero"
               fill
-              priority
+              preload
               className="object-cover"
               sizes="(min-width: 1024px) 55vw, 100vw"
             />

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
-import { getProducts } from "@/lib/db";
+import { getProducts } from "@/lib/catalog";
+
+export const dynamic = "force-static";
 
 export async function GET() {
   const products = await getProducts();

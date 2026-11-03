@@ -77,9 +77,10 @@ export function Header() {
             >
               <Search />
             </button>
-            <Link href="/account" aria-label="Account" className="hidden sm:grid h-9 w-9 place-items-center rounded-full hover:bg-cocoa-500/5">
+            {/* A full page load, so proxy.ts can renew the session cookie: the storefront doesn't run Clerk. */}
+            <a href="/account" aria-label="Account" className="hidden sm:grid h-9 w-9 place-items-center rounded-full hover:bg-cocoa-500/5">
               <User />
-            </Link>
+            </a>
             <Link href="/account/wishlist" aria-label="Wishlist" className="relative hidden sm:grid h-9 w-9 place-items-center rounded-full hover:bg-cocoa-500/5">
               <Heart />
               {displayWish > 0 && <Badge n={displayWish} />}
@@ -132,9 +133,9 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
               </li>
             ))}
             <li className="pt-2 border-t hairline">
-              <Link href="/account" onClick={onClose} className="text-base uppercase tracking-widish text-cocoa-500">
+              <a href="/account" onClick={onClose} className="text-base uppercase tracking-widish text-cocoa-500">
                 Account
-              </Link>
+              </a>
             </li>
             <li>
               <Link href="/account/wishlist" onClick={onClose} className="text-base uppercase tracking-widish text-cocoa-500">
