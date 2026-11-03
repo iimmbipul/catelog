@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Arrow } from "@/components/ui/Icons";
-import { getCollections, getProducts } from "@/lib/db";
+import { getCollections, getProducts } from "@/lib/catalog";
 
 export const metadata = { title: "Collections" };
 

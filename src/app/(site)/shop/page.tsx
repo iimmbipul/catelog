@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ShopClient } from "@/components/site/ShopClient";
-import { getCollections, getProducts } from "@/lib/db";
+import { getCollections, getProducts, toProductSummary } from "@/lib/catalog";
 
 export const metadata = { title: "Shop candles" };
 
@@ -19,7 +19,7 @@ export default async function ShopPage() {
           collection.
         </p>
       </div>
-      <ShopClient products={products} collections={collections} />
+      <ShopClient products={products.map(toProductSummary)} collections={collections} />
     </div>
   );
 }

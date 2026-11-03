@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { ProductCard } from "./ProductCard";
 import { useWishlist } from "@/lib/store";
-import type { Product } from "@/lib/types";
+import type { ProductSummary } from "@/lib/types";
 
-export function WishlistClient({ products }: { products: Product[] }) {
+export function WishlistClient({ products }: { products: ProductSummary[] }) {
   const ids = useWishlist((s) => s.ids);
   const wished = products.filter((p) => ids.includes(p.id));
 

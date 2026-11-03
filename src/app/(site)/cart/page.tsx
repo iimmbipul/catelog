@@ -1,5 +1,5 @@
 import { CartClient } from "@/components/site/CartClient";
-import { getCoupons, getSettings } from "@/lib/db";
+import { getCoupons, getSettings } from "@/lib/catalog";
 
 export const metadata = { title: "Cart" };
 

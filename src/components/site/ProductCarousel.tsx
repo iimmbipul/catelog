@@ -1,10 +1,10 @@
 "use client";
 import { useRef } from "react";
 import { ProductCard } from "./ProductCard";
-import type { Product } from "@/lib/types";
+import type { ProductSummary } from "@/lib/types";
 import { Arrow } from "@/components/ui/Icons";
 
-export function ProductCarousel({ products }: { products: Product[] }) {
+export function ProductCarousel({ products }: { products: ProductSummary[] }) {
   const scroller = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: 1 | -1) => {

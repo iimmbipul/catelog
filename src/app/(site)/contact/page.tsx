@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Facebook, Instagram, Youtube } from "@/components/ui/Icons";
-import { getSettings } from "@/lib/db";
+import { getSettings } from "@/lib/catalog";
 
 export const metadata = { title: "Contact" };
 

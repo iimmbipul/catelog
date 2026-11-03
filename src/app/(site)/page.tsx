@@ -7,7 +7,7 @@ import { StorySection } from "@/components/site/StorySection";
 import { GiftingBanner } from "@/components/site/GiftingBanner";
 import { Reviews } from "@/components/site/Reviews";
 import { Gallery } from "@/components/site/Gallery";
-import { getCollections, getInstagramPosts, getProducts, getReviews, getSettings } from "@/lib/db";
+import { getCollections, getInstagramPosts, getProducts, getReviews, getSettings, toProductSummary } from "@/lib/catalog";
 import { IMG } from "@/lib/images";
 import { FloralSprig } from "@/components/site/Illustrations";
 
@@ -68,7 +68,7 @@ export default async function HomePage() {
             href={`/collections/${c.slug}`}
             cta={`Shop ${c.title}`}
           />
-          <ProductCarousel products={items} />
+          <ProductCarousel products={items.map(toProductSummary)} />
         </section>
       ))}
 
@@ -79,7 +79,7 @@ export default async function HomePage() {
           href="/collections/best-sellers"
           cta="Shop best sellers"
         />
-        <ProductCarousel products={bestSellers} />
+        <ProductCarousel products={bestSellers.map(toProductSummary)} />
       </section>
 
       <section className="container-page mt-28">
@@ -89,7 +89,7 @@ export default async function HomePage() {
           href="/collections/new-arrivals"
           cta="Shop new arrivals"
         />
-        <ProductCarousel products={newArrivals} />
+        <ProductCarousel products={newArrivals.map(toProductSummary)} />
       </section>
 
       <FeatureRow />

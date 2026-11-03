@@ -1,5 +1,5 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { getFaqs } from "@/lib/db";
+import { getFaqs } from "@/lib/catalog";
 import { FaqAccordion } from "@/components/site/FaqAccordion";
 
 export const metadata = { title: "FAQs" };

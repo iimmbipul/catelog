@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
-import { getProducts } from "@/lib/db";
+import { getProducts } from "@/lib/catalog";
 import { money } from "@/lib/format";
 
 type Props = { searchParams: Promise<{ q?: string }> };

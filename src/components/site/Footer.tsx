@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { Facebook, Instagram, Youtube } from "@/components/ui/Icons";
-import { getSettings } from "@/lib/db";
+import { getSettings } from "@/lib/catalog";
 
 const col = "space-y-3 text-sm text-cocoa-500";
 const heading = "eyebrow text-cocoa-400";

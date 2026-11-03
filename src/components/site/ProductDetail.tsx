@@ -96,7 +96,7 @@ export function ProductDetail({ product, reviews }: { product: Product; reviews:
             alt={activeImage?.alt ?? product.name}
             fill
             className="object-cover transition-transform duration-700 ease-expo hover:scale-105 animate-fade-up"
-            priority
+            preload
             sizes="(min-width: 1024px) 55vw, 100vw"
           />
         </div>
