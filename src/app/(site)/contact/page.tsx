@@ -1,8 +1,14 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Facebook, Instagram, Youtube } from "@/components/ui/Icons";
 import { getSettings } from "@/lib/catalog";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Contact" };
+export const metadata = pageMetadata({
+  title: "Contact Us",
+  description:
+    "Questions about an order, gifting or custom hampers? Write to White & Wick or message us on Instagram. We reply within a working day.",
+  path: "/contact",
+});
 
 export default async function ContactPage() {
   const settings = await getSettings();

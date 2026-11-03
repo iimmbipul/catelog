@@ -3,7 +3,10 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ProductDetail } from "@/components/site/ProductDetail";
 import { ProductCarousel } from "@/components/site/ProductCarousel";
 import { SectionHeader } from "@/components/site/SectionHeader";
-import { getProductBySlug, getProducts, getReviews, toProductSummary } from "@/lib/catalog";
+import { JsonLd } from "@/components/site/JsonLd";
+import { getCollections, getProductBySlug, getProducts, getReviews, toProductSummary } from "@/lib/catalog";
+import { productSchema } from "@/lib/schema";
+import { productMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -17,12 +20,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) return { title: "Product not found" };
-  return {
-    title: product.seoTitle ?? product.name,
-    description: product.seoDescription ?? product.shortDescription,
-    openGraph: { images: product.images[0]?.url ? [product.images[0].url] : undefined },
-  };
+  return product ? productMetadata(product) : { title: "Product not found" };
 }
 
 export default async function ProductPage({ params }: Props) {
@@ -30,7 +28,13 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlug(slug);
   if (!product) return notFound();
 
-  const [all, reviews] = await Promise.all([getProducts(), getReviews(product.id)]);
+  const [all, allReviews, collections] = await Promise.all([getProducts(), getReviews(product.id), getCollections()]);
+  const reviews = allReviews.filter((r) => r.approved);
+  // Links the product back to its collection. Best sellers and new arrivals are
+  // lists rather than a category, so they don't count as its home.
+  const home = collections.find(
+    (c) => c.slug === product.collections.find((s) => s !== "best-sellers" && s !== "new-arrivals"),
+  );
   const related = all
     .filter((p) => p.id !== product.id && p.collections.some((c) => product.collections.includes(c)))
     .slice(0, 4);
@@ -38,11 +42,13 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={productSchema(product, reviews)} />
       <div className="container-page pt-8 lg:pt-14">
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
             { label: "Shop", href: "/shop" },
+            ...(home ? [{ label: home.title, href: `/collections/${home.slug}` }] : []),
             { label: product.name },
           ]}
         />

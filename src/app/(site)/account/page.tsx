@@ -5,8 +5,9 @@ import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { SessionRecheck } from "@/components/site/SessionRecheck";
 import { getOrders } from "@/lib/db";
 import { money, shortDate } from "@/lib/format";
+import { privateMetadata } from "@/lib/seo";
 
-export const metadata = { title: "My account" };
+export const metadata = privateMetadata("My account");
 
 export default async function AccountPage() {
   const user = await currentUser();

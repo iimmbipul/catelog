@@ -27,7 +27,7 @@ export function Hero({ settings }: { settings: Settings }) {
           {hasCustomHeroImage(homepage.heroImage) ? (
             <Image
               src={homepage.heroImage}
-              alt="White & Wick hero"
+              alt="White & Wick, a house of candles: logo in a floral wreath"
               fill
               preload
               className="object-cover"
@@ -46,9 +46,11 @@ export function Hero({ settings }: { settings: Settings }) {
           <Bee className="pointer-events-none absolute right-4 top-16 hidden h-8 w-8 lg:block" />
 
           <div className="relative">
-            <p className="eyebrow">A House of Candles</p>
-            <h1 className="mt-6 heading-serif text-display whitespace-pre-line">
-              {homepage.heroHeading}
+            <h1>
+              <span className="eyebrow block">Handmade scented candles</span>
+              <span className="mt-6 block heading-serif text-display whitespace-pre-line">
+                {homepage.heroHeading}
+              </span>
             </h1>
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-cocoa-500">
               {homepage.heroSubheading}

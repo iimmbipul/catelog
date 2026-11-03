@@ -1,8 +1,9 @@
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { getProducts, toProductSummary } from "@/lib/catalog";
 import { WishlistClient } from "@/components/site/WishlistClient";
+import { privateMetadata } from "@/lib/seo";
 
-export const metadata = { title: "Wishlist" };
+export const metadata = privateMetadata("Wishlist");
 
 export default async function WishlistPage() {
   const products = await getProducts();

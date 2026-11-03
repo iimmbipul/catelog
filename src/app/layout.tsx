@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
+import { DEFAULT_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const serif = Cormorant_Garamond({
@@ -17,19 +18,19 @@ const sans = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://whiteandwick.example"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "White & Wick — Light something beautiful.",
-    template: "%s • White & Wick",
+    default: SITE_NAME,
+    template: `%s • ${SITE_NAME}`,
   },
-  description:
-    "White & Wick creates thoughtfully crafted candles designed to turn ordinary moments into warm, beautiful rituals.",
+  description: "Hand-poured scented candles and candle gifts, made in Bengaluru and shipped across India.",
   openGraph: {
-    title: "White & Wick",
-    description:
-      "Hand-poured scented candles and gifting for the everyday and the extraordinary.",
+    title: SITE_NAME,
+    description: "Hand-poured scented candles and candle gifts, made in Bengaluru and shipped across India.",
+    siteName: SITE_NAME,
     type: "website",
-    images: ["/logo.jpeg"],
+    locale: "en_IN",
+    images: [DEFAULT_IMAGE],
   },
 };
 
@@ -39,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable}`}>
+    <html lang="en-IN" className={`${serif.variable} ${sans.variable}`}>
       <body className="antialiased">
         {children}
       </body>

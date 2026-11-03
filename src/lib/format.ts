@@ -1,3 +1,14 @@
+/* Average of the given reviews, to one decimal place. */
+export function averageRating(reviews: { rating: number }[]) {
+  return Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) * 10) / 10;
+}
+
+/* Catalog wax values vary ("Soy wax ", "Soy Wax", "Soy wax , Gel wax"). */
+export function cleanWax(wax: string) {
+  const s = wax.trim().replace(/\s*,\s*/g, ", ").toLowerCase();
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 export const INR = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
