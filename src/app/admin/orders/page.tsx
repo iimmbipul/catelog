@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PageHeader, Card, StatusPill } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getOrders } from "@/lib/db";
 import { money, shortDate } from "@/lib/format";
 
@@ -10,6 +11,7 @@ const STATUSES = ["all", "new", "confirmed", "processing", "packed", "shipped", 
 type Props = { searchParams: Promise<{ status?: string }> };
 
 export default async function OrdersPage({ searchParams }: Props) {
+  await requireAdmin();
   const { status } = await searchParams;
   const orders = await getOrders();
   const filtered = status && status !== "all" ? orders.filter((o) => o.orderStatus === status) : orders;

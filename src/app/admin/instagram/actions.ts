@@ -1,9 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { getInstagramPosts, saveInstagramPosts } from "@/lib/db";
 import type { InstagramPost } from "@/lib/types";
 
 export async function saveInstagramPostAction(fd: FormData) {
+  await requireAdmin();
   const id = String(fd.get("id") ?? "") || `ig_${Date.now()}`;
   const list = await getInstagramPosts();
   const existing = list.find((p) => p.id === id);
@@ -24,6 +26,7 @@ export async function saveInstagramPostAction(fd: FormData) {
 }
 
 export async function deleteInstagramPostAction(id: string) {
+  await requireAdmin();
   const list = await getInstagramPosts();
   await saveInstagramPosts(list.filter((p) => p.id !== id));
   revalidatePath("/");

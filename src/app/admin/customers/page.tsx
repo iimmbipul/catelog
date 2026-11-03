@@ -1,10 +1,12 @@
 import { PageHeader, Card, StatCard } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getCustomers, getOrders } from "@/lib/db";
 import { money, shortDate } from "@/lib/format";
 
 export const metadata = { title: "Admin — Customers" };
 
 export default async function CustomersPage() {
+  await requireAdmin();
   const [customers, orders] = await Promise.all([getCustomers(), getOrders()]);
   const totalSpend = customers.reduce((s, c) => s + c.totalSpend, 0);
   const repeat = customers.filter((c) => c.ordersCount > 1).length;

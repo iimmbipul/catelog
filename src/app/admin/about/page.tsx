@@ -1,10 +1,12 @@
 import { PageHeader, Card } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getSettings } from "@/lib/db";
 import { AboutForm } from "./AboutForm";
 
 export const metadata = { title: "Admin — About page" };
 
 export default async function AboutAdminPage() {
+  await requireAdmin();
   const settings = await getSettings();
   return (
     <>

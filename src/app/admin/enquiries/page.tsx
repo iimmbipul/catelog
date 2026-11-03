@@ -1,4 +1,5 @@
 import { PageHeader, Card, StatusPill } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getGiftEnquiries } from "@/lib/db";
 import { shortDate } from "@/lib/format";
 import { EnquiryActions } from "./EnquiryActions";
@@ -6,6 +7,7 @@ import { EnquiryActions } from "./EnquiryActions";
 export const metadata = { title: "Admin — Gift enquiries" };
 
 export default async function EnquiriesPage() {
+  await requireAdmin();
   const list = await getGiftEnquiries();
   return (
     <>

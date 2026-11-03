@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/admin/ui";
 import { ProductForm } from "@/components/admin/ProductForm";
+import { requireAdmin } from "@/lib/auth";
 import { getCollections, getProductById } from "@/lib/db";
 
 type Props = { params: Promise<{ id: string }> };
@@ -8,6 +9,7 @@ type Props = { params: Promise<{ id: string }> };
 export const metadata = { title: "Admin — Edit product" };
 
 export default async function EditProductPage({ params }: Props) {
+  await requireAdmin();
   const { id } = await params;
   const [product, collections] = await Promise.all([getProductById(id), getCollections()]);
   if (!product) return notFound();

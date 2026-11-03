@@ -1,4 +1,5 @@
 import { PageHeader, Card } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getProducts, getReviews } from "@/lib/db";
 import { shortDate } from "@/lib/format";
 import { Star } from "@/components/ui/Icons";
@@ -7,6 +8,7 @@ import { ReviewActions } from "./ReviewActions";
 export const metadata = { title: "Admin — Reviews" };
 
 export default async function ReviewsPage() {
+  await requireAdmin();
   const [reviews, products] = await Promise.all([getReviews(), getProducts()]);
   return (
     <>

@@ -1,9 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { getOrders, saveOrders } from "@/lib/db";
 import type { OrderStatus, PaymentStatus } from "@/lib/types";
 
 export async function updateOrderStatusAction(orderNumber: string, status: OrderStatus) {
+  await requireAdmin();
   const orders = await getOrders();
   const idx = orders.findIndex((o) => o.orderNumber === orderNumber);
   if (idx < 0) return { ok: false };
@@ -15,6 +17,7 @@ export async function updateOrderStatusAction(orderNumber: string, status: Order
 }
 
 export async function updatePaymentStatusAction(orderNumber: string, status: PaymentStatus) {
+  await requireAdmin();
   const orders = await getOrders();
   const idx = orders.findIndex((o) => o.orderNumber === orderNumber);
   if (idx < 0) return { ok: false };

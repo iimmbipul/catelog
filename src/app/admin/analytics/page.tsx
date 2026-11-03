@@ -1,12 +1,14 @@
 import Image from "next/image";
 import { PageHeader, Card, StatCard } from "@/components/admin/ui";
 import { SalesChart } from "@/components/admin/SalesChart";
+import { requireAdmin } from "@/lib/auth";
 import { getCollections, getCoupons, getCustomers, getOrders, getProducts } from "@/lib/db";
 import { money } from "@/lib/format";
 
 export const metadata = { title: "Admin — Analytics" };
 
 export default async function AnalyticsPage() {
+  await requireAdmin();
   const [orders, products, customers, collections, coupons] = await Promise.all([
     getOrders(),
     getProducts(),

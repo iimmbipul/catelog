@@ -1,9 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { getBanners, saveBanners } from "@/lib/db";
 import type { Banner } from "@/lib/types";
 
 export async function saveBannerAction(fd: FormData) {
+  await requireAdmin();
   const id = String(fd.get("id") ?? "") || `b_${Date.now()}`;
   const banners = await getBanners();
   const existing = banners.find((b) => b.id === id);
@@ -27,6 +29,7 @@ export async function saveBannerAction(fd: FormData) {
 }
 
 export async function deleteBannerAction(id: string) {
+  await requireAdmin();
   const banners = await getBanners();
   await saveBanners(banners.filter((b) => b.id !== id));
   revalidatePath("/admin/banners");

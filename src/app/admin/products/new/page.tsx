@@ -1,10 +1,12 @@
 import { PageHeader } from "@/components/admin/ui";
 import { ProductForm } from "@/components/admin/ProductForm";
+import { requireAdmin } from "@/lib/auth";
 import { getCollections } from "@/lib/db";
 
 export const metadata = { title: "Admin — New product" };
 
 export default async function NewProductPage() {
+  await requireAdmin();
   const collections = await getCollections();
   return (
     <>

@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { PageHeader, Card } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getBanners } from "@/lib/db";
 import { BannerActions } from "./BannerActions";
 
 export const metadata = { title: "Admin — Banners" };
 
 export default async function BannersPage() {
+  await requireAdmin();
   const banners = await getBanners();
   return (
     <>

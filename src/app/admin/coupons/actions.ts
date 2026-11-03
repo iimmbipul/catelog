@@ -1,9 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth";
 import { getCoupons, saveCoupons } from "@/lib/db";
 import type { Coupon } from "@/lib/types";
 
 export async function saveCouponAction(fd: FormData) {
+  await requireAdmin();
   const id = String(fd.get("id") ?? "") || `cp_${Date.now()}`;
   const coupons = await getCoupons();
   const existing = coupons.find((c) => c.id === id);
@@ -29,6 +31,7 @@ export async function saveCouponAction(fd: FormData) {
 }
 
 export async function deleteCouponAction(id: string) {
+  await requireAdmin();
   const coupons = await getCoupons();
   await saveCoupons(coupons.filter((c) => c.id !== id));
   revalidatePath("/admin/coupons");
@@ -36,6 +39,7 @@ export async function deleteCouponAction(id: string) {
 }
 
 export async function toggleCouponAction(id: string) {
+  await requireAdmin();
   const coupons = await getCoupons();
   const idx = coupons.findIndex((c) => c.id === id);
   if (idx < 0) return { ok: false };

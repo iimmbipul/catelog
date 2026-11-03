@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { PageHeader, Card, StatusPill } from "@/components/admin/ui";
+import { requireAdmin } from "@/lib/auth";
 import { getProducts } from "@/lib/db";
 import { money } from "@/lib/format";
 import { ProductRowActions } from "./ProductRowActions";
@@ -8,6 +9,7 @@ import { ProductRowActions } from "./ProductRowActions";
 export const metadata = { title: "Admin — Products" };
 
 export default async function AdminProductsPage() {
+  await requireAdmin();
   const products = await getProducts();
 
   return (
